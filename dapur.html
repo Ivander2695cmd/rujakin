@@ -184,7 +184,7 @@
       <div class="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
         <div>
           <p class="text-xs font-semibold text-stone-500">Antrean Perlu Diracik</p>
-          <h3 id="statActiveOrders" class="text-2xl sm:text-3xl font-black text-coral mt-1">2</h3>
+          <h3 id="statActiveOrders" class="text-2xl sm:text-3xl font-black text-coral mt-1">0</h3>
           <p class="text-[11px] text-stone-400 mt-0.5">Segera proses bumbu & buah</p>
         </div>
         <div class="w-12 h-12 rounded-xl bg-coral/10 text-coral flex items-center justify-center">
@@ -537,87 +537,11 @@
       { id: "rjk-natsepa", name: "Rujak Buah Natsepa Ambon", price: 24000, available: true }
     ];
 
-    // Pesanan Demo Awal (Memastikan panel preview langsung hidup & dapat dicoba seketika)
-    const DEMO_ORDERS = [
-      {
-        orderId: "RJK-2041",
-        customerName: "Budi Santoso",
-        customerPhone: "6281299887766",
-        serviceType: "delivery",
-        deliveryAddress: "Jl. Melati No. 14, RT 02/05, Kebayoran Baru",
-        paymentMethod: "qris",
-        items: [
-          {
-            name: "Rujak Manis Surabaya",
-            quantity: 2,
-            price: 22000,
-            spiceLevel: "3 Cabai (Pedas Mantap)",
-            nutTexture: "Kacang Kasar (Crunchy)",
-            saucePos: "Bumbu Dipisah",
-            notes: "Banyakin mangga muda dan jambunya ya kak"
-          }
-        ],
-        subtotal: 44000,
-        deliveryFee: 10000,
-        grandTotal: 54000,
-        status: "antrean",
-        createdAt: new Date().toISOString()
-      },
-      {
-        orderId: "RJK-1980",
-        customerName: "Siti Rahma",
-        customerPhone: "6285711223344",
-        serviceType: "pickup",
-        deliveryAddress: "Ambil Sendiri di Kedai",
-        paymentMethod: "cod",
-        items: [
-          {
-            name: "Rujak Cingur Istimewa",
-            quantity: 1,
-            price: 28000,
-            spiceLevel: "2 Cabai (Sedang Pas)",
-            nutTexture: "Kacang Halus (Creamy)",
-            saucePos: "Dicampur Langsung",
-            notes: "Cingurnya dipotong kecil-kecil"
-          }
-        ],
-        subtotal: 28000,
-        deliveryFee: 0,
-        grandTotal: 28000,
-        status: "diracik",
-        createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString()
-      },
-      {
-        orderId: "RJK-1855",
-        customerName: "Dewi Lestari",
-        customerPhone: "6287812345678",
-        serviceType: "delivery",
-        deliveryAddress: "Komplek Palem Asri Blok C2",
-        paymentMethod: "qris",
-        items: [
-          {
-            name: "Rujak Kuah Pindang Bali",
-            quantity: 2,
-            price: 20000,
-            spiceLevel: "4 Cabai (Pedas Nampol)",
-            nutTexture: "Tanpa Kacang",
-            saucePos: "Dicampur Langsung",
-            notes: "Kuah pindangnya agak banyak"
-          }
-        ],
-        subtotal: 40000,
-        deliveryFee: 10000,
-        grandTotal: 48000,
-        status: "selesai",
-        createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString()
-      }
-    ];
-
-    // State Aplikasi Dapur
+    // State Aplikasi Dapur (Murni bersumber dari Cloud Firestore, tanpa pesanan demo)
     let isUnlocked = false;
     let currentFilter = "all";
-    let ordersData = [...DEMO_ORDERS];
-    let knownOrderIds = new Set(DEMO_ORDERS.map(o => o.orderId));
+    let ordersData = [];
+    let knownOrderIds = new Set();
     let soundEnabled = true;
     let soundSynth = null;
     let isFirstLoad = true;
@@ -1271,28 +1195,27 @@
           cloudList.push({ ...docSnap.data(), orderId: docSnap.id });
         });
 
-        if (cloudList.length > 0) {
-          cloudList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+        cloudList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
 
-          if (!isFirstLoad) {
-            let hasNewIncoming = false;
-            cloudList.forEach(order => {
-              if (!knownOrderIds.has(order.orderId) && order.status === "antrean") {
-                hasNewIncoming = true;
-              }
-            });
-            if (hasNewIncoming) {
-              playNewOrderChime();
-              showToast("Pesanan baru masuk ke antrean!", "🌶️");
+        if (!isFirstLoad) {
+          let hasNewIncoming = false;
+          cloudList.forEach(order => {
+            if (!knownOrderIds.has(order.orderId) && order.status === "antrean") {
+              hasNewIncoming = true;
             }
+          });
+          if (hasNewIncoming) {
+            playNewOrderChime();
+            showToast("Pesanan baru masuk ke antrean!", "🌶️");
           }
-
-          knownOrderIds = new Set(cloudList.map(o => o.orderId));
-          ordersData = cloudList;
-          isFirstLoad = false;
-          renderOrders();
-          updateMetrics();
         }
+
+        knownOrderIds = new Set(cloudList.map(o => o.orderId));
+        // Sinkronisasi data real-time: jika di Firebase kosong, layar dapur ikut bersih
+        ordersData = cloudList;
+        isFirstLoad = false;
+        renderOrders();
+        updateMetrics();
       }, (err) => {
         console.log("Menggunakan antrean lokal:", err.message);
       });
