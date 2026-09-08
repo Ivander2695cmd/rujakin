@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Portal Dapur & Kasir - RUJAKIN</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FAF8F5',
+            charcoal: '#232723',
+            coral: '#FF6B4A',
+            'coral-dark': '#E05334',
+            kedondong: '#5B8C5A',
+            'kedondong-dark': '#487247'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Font: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tone.js Audio Engine untuk Bel Dapur -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF8F5;
+      color: #232723;
+      overflow-x: hidden;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .tap-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-coral selection:text-white bg-[#FAF8F5]">
+
+  <!-- ==================== GERBANG PIN KASIR ==================== -->
+  <div id="pinLockScreen" class="fixed inset-0 z-50 bg-stone-900/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center border border-stone-200 animate-in zoom-in-95 duration-150">
+      <div class="w-14 h-14 bg-coral/10 text-coral rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+
+      <h2 class="text-xl font-black text-charcoal">Akses Khusus Dapur</h2>
+      <p class="text-xs text-stone-500 mt-1 mb-4">Masukkan 4 digit PIN kasir untuk membuka papan antrean dapur (PIN Default: <strong>1234</strong>)</p>
+
+      <div class="mb-4">
+        <input 
+          type="password" 
+          id="inputPin" 
+          maxlength="4" 
+          pattern="[0-9]*" 
+          inputmode="numeric" 
+          placeholder="••••" 
+          value="1234"
+          class="w-full text-center text-3xl font-extrabold tracking-[0.5em] py-3 px-4 rounded-2xl border-2 border-stone-200 focus:border-coral focus:outline-none bg-stone-50 transition-all"
+        >
+        <p id="pinErrorMessage" class="hidden text-xs text-red-500 font-semibold mt-2">PIN salah, silakan coba lagi</p>
+      </div>
+
+      <!-- Quick Numeric Keypad -->
+      <div class="grid grid-cols-3 gap-2 mb-4">
+        <button type="button" onclick="window.appendPinNumber('1')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">1</button>
+        <button type="button" onclick="window.appendPinNumber('2')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">2</button>
+        <button type="button" onclick="window.appendPinNumber('3')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">3</button>
+        <button type="button" onclick="window.appendPinNumber('4')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">4</button>
+        <button type="button" onclick="window.appendPinNumber('5')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">5</button>
+        <button type="button" onclick="window.appendPinNumber('6')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">6</button>
+        <button type="button" onclick="window.appendPinNumber('7')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">7</button>
+        <button type="button" onclick="window.appendPinNumber('8')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">8</button>
+        <button type="button" onclick="window.appendPinNumber('9')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">9</button>
+        <button type="button" onclick="window.clearPinNumber()" class="py-3 text-xs font-bold text-stone-500 bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">Reset</button>
+        <button type="button" onclick="window.appendPinNumber('0')" class="py-3 text-lg font-bold bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">0</button>
+        <button type="button" onclick="window.backspacePinNumber()" class="py-3 text-sm font-bold text-stone-500 bg-stone-100 hover:bg-stone-200 rounded-xl tap-target transition-colors">⌫</button>
+      </div>
+
+      <button 
+        id="btnUnlockKitchen" 
+        class="w-full py-3.5 bg-coral hover:bg-coral-dark text-white font-bold rounded-2xl shadow-md transition-all tap-target flex items-center justify-center gap-2"
+      >
+        <span>Buka Panel Dapur (PIN 1234)</span>
+      </button>
+
+      <a href="index.html" class="inline-block mt-3 text-xs text-stone-400 hover:text-stone-600 font-medium">
+        Kembali ke Katalog Pembeli
+      </a>
+    </div>
+  </div>
+
+  <!-- ==================== HEADER DAPUR ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      
+      <!-- Brand & KDS Tag -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-xl bg-charcoal flex items-center justify-center text-white shadow-sm">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight text-charcoal">RUJAK<span class="text-coral">IN</span></span>
+          <span class="ml-1.5 px-2 py-0.5 rounded-md bg-stone-100 border border-stone-200 text-[10px] font-bold text-stone-600 uppercase tracking-wider">Kitchen & Cashier</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2">
+        <!-- Sound Toggle -->
+        <button 
+          id="btnToggleSound" 
+          class="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-bold text-stone-700 hover:border-coral transition-all tap-target"
+          title="Nyalakan / Matikan Suara Bel"
+        >
+          <span id="soundIcon">🔔</span>
+          <span id="soundText" class="hidden sm:inline">Bel Aktif</span>
+        </button>
+
+        <!-- Tombol Rekap Statistik Harian 24 Jam -->
+        <button 
+          id="btnOpenDailyReport" 
+          class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-coral hover:bg-coral-dark text-white text-xs font-bold transition-all tap-target shadow-sm"
+          title="Buka Rekap Penjualan 24 Jam"
+        >
+          <span>📊</span>
+          <span class="hidden sm:inline">Rekap Hari Ini</span>
+        </button>
+
+        <!-- Menu Stock Drawer Toggle -->
+        <button 
+          id="btnOpenStockModal" 
+          class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-kedondong hover:bg-kedondong-dark text-white text-xs font-bold transition-all tap-target shadow-sm"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+          <span class="hidden sm:inline">Kontrol Stok</span>
+        </button>
+
+        <!-- Lock Screen Button -->
+        <button 
+          id="btnLockScreen" 
+          class="p-2.5 rounded-xl border border-stone-200 text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-all tap-target"
+          title="Kunci Layar Dapur"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+
+    <!-- Metrics Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      
+      <!-- Card 1: Antrean Aktif -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-stone-500">Antrean Perlu Diracik</p>
+          <h3 id="statActiveOrders" class="text-2xl sm:text-3xl font-black text-coral mt-1">2</h3>
+          <p class="text-[11px] text-stone-400 mt-0.5">Segera proses bumbu & buah</p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-coral/10 text-coral flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 2: Total Omset Hari Ini (Klik untuk Buka Rekap) -->
+      <div 
+        id="cardRevenueTrigger" 
+        class="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-coral transition-all group"
+        title="Klik untuk melihat rincian rekap penjualan hari ini"
+      >
+        <div>
+          <div class="flex items-center gap-1.5">
+            <p class="text-xs font-semibold text-stone-500">Omset Hari Ini</p>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">24 Jam</span>
+          </div>
+          <h3 id="statTotalRevenue" class="text-2xl sm:text-3xl font-black text-emerald-600 mt-1">Rp 0</h3>
+          <p class="text-[11px] text-coral font-medium mt-0.5 group-hover:underline">Buka rekap penjualan & item ➔</p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 3: Menu Aktif -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl border border-stone-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-stone-500">Kesiapan Menu</p>
+          <h3 id="statActiveMenuCount" class="text-2xl sm:text-3xl font-black text-charcoal mt-1">6 / 6</h3>
+          <p class="text-[11px] text-stone-400 mt-0.5">Varian buah & bumbu tersedia</p>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-stone-100 text-stone-600 flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Status Filter Tab Bar -->
+    <section class="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-1.5 p-1 bg-stone-200/70 rounded-xl overflow-x-auto no-scrollbar">
+        <button 
+          data-status="all" 
+          class="tab-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-white text-charcoal shadow-sm transition-all"
+        >
+          Semua Pesanan
+        </button>
+        <button 
+          data-status="antrean" 
+          class="tab-filter-btn px-4 py-2 rounded-lg text-xs font-bold text-stone-600 hover:text-charcoal transition-all"
+        >
+          Menunggu (Antrean)
+        </button>
+        <button 
+          data-status="diracik" 
+          class="tab-filter-btn px-4 py-2 rounded-lg text-xs font-bold text-stone-600 hover:text-charcoal transition-all"
+        >
+          Sedang Diracik
+        </button>
+        <button 
+          data-status="selesai" 
+          class="tab-filter-btn px-4 py-2 rounded-lg text-xs font-bold text-stone-600 hover:text-charcoal transition-all"
+        >
+          Pesanan Selesai
+        </button>
+      </div>
+
+      <!-- Live Sync Indicator & Quick Clear Action -->
+      <div class="flex items-center gap-3">
+        <button 
+          id="btnClearCompletedOrders" 
+          onclick="window.promptClearAllCompleted()"
+          class="hidden px-3 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-all tap-target flex items-center gap-1.5"
+          title="Hapus seluruh pesanan selesai dari Firebase"
+        >
+          <span>🗑️</span>
+          <span>Bersihkan Selesai</span>
+        </button>
+
+        <div class="flex items-center gap-2 text-xs font-medium text-stone-500">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="syncStatusText">Sistem Dapur Aktif</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Order Grid Display -->
+    <section>
+      <div id="ordersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyOrdersNotice" class="hidden py-20 text-center">
+        <div class="w-16 h-16 bg-stone-100 text-stone-300 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <h3 class="text-base font-bold text-stone-600">Belum Ada Pesanan di Tab Ini</h3>
+        <p class="text-xs text-stone-400 mt-1">Pesanan baru dari katalog pembeli akan otomatis muncul di sini dan membunyikan bel.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== MODAL REKAP PENJUALAN 24 JAM ==================== -->
+  <div id="dailyReportModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white w-full max-w-2xl max-h-[90vh] rounded-3xl flex flex-col shadow-2xl overflow-hidden border border-stone-200 animate-in zoom-in-95 duration-150">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-stone-200 flex items-center justify-between bg-stone-50/80">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-coral/10 text-coral flex items-center justify-center font-black text-lg">
+            📊
+          </div>
+          <div>
+            <h2 class="font-extrabold text-base sm:text-lg text-charcoal">Rekap Penjualan 24 Jam</h2>
+            <p id="reportDateSubtitle" class="text-xs text-stone-500 font-medium">Memuat tanggal...</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <!-- Date Filter Toggle (Hari Ini vs Kemarin) -->
+          <div class="flex items-center p-1 bg-stone-200/80 rounded-xl text-xs font-bold">
+            <button id="btnFilterReportToday" class="px-3 py-1.5 rounded-lg bg-white text-charcoal shadow-xs transition-all">Hari Ini</button>
+            <button id="btnFilterReportYesterday" class="px-3 py-1.5 rounded-lg text-stone-600 hover:text-charcoal transition-all">Kemarin</button>
+          </div>
+          <button id="btnCloseDailyReport" class="p-2 text-stone-400 hover:text-charcoal rounded-full tap-target transition-colors">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
+        
+        <!-- Quick Summary 4 Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- Omset Selesai -->
+          <div class="p-3.5 bg-emerald-50 rounded-2xl border border-emerald-100">
+            <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider block">Omset Selesai</span>
+            <span id="reportTotalOmset" class="text-lg sm:text-xl font-black text-emerald-600 block mt-1">Rp 0</span>
+            <span class="text-[10px] text-emerald-700/80 font-medium mt-0.5 block">Lunas terverifikasi</span>
+          </div>
+
+          <!-- Total Transaksi Selesai -->
+          <div class="p-3.5 bg-blue-50 rounded-2xl border border-blue-100">
+            <span class="text-[11px] font-bold text-blue-800 uppercase tracking-wider block">Pesanan Selesai</span>
+            <span id="reportSuccessOrders" class="text-lg sm:text-xl font-black text-blue-700 block mt-1">0 Order</span>
+            <span class="text-[10px] text-blue-600 font-medium mt-0.5 block">Status tuntas</span>
+          </div>
+
+          <!-- Total Porsi Rujak Laku -->
+          <div class="p-3.5 bg-amber-50 rounded-2xl border border-amber-100">
+            <span class="text-[11px] font-bold text-amber-800 uppercase tracking-wider block">Porsi Terjual</span>
+            <span id="reportTotalPortions" class="text-lg sm:text-xl font-black text-amber-600 block mt-1">0 Porsi</span>
+            <span class="text-[10px] text-amber-700 font-medium mt-0.5 block">Total mangkuk rujak</span>
+          </div>
+
+          <!-- Total Cabai Diulek -->
+          <div class="p-3.5 bg-rose-50 rounded-2xl border border-rose-100">
+            <span class="text-[11px] font-bold text-rose-800 uppercase tracking-wider block">Cabai Diulek</span>
+            <span id="reportTotalChili" class="text-lg sm:text-xl font-black text-rose-600 block mt-1">0 Butir</span>
+            <span class="text-[10px] text-rose-700 font-medium mt-0.5 block">Level kepedasan</span>
+          </div>
+        </div>
+
+        <!-- Pemisahan Aliran Kas (Uang Masuk) -->
+        <div class="bg-stone-50 rounded-2xl p-4 border border-stone-200">
+          <h3 class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-3">Pemisahan Aliran Kas (Uang Masuk)</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-3.5 bg-white rounded-xl border border-stone-200 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-stone-700 flex items-center gap-1.5">
+                  <span>💳</span> QRIS & Transfer Bank
+                </span>
+                <span id="reportQrisCount" class="text-[11px] text-stone-400 block mt-0.5">0 transaksi</span>
+              </div>
+              <span id="reportQrisTotal" class="text-sm font-black text-blue-600">Rp 0</span>
+            </div>
+
+            <div class="p-3.5 bg-white rounded-xl border border-stone-200 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-stone-700 flex items-center gap-1.5">
+                  <span>💵</span> Tunai di Tempat (COD)
+                </span>
+                <span id="reportCodCount" class="text-[11px] text-stone-400 block mt-0.5">0 transaksi</span>
+              </div>
+              <span id="reportCodTotal" class="text-sm font-black text-emerald-600">Rp 0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breakdown Menu Terlaris (Item Laku) -->
+        <div>
+          <div class="flex items-center justify-between mb-2.5">
+            <h3 class="text-xs font-bold text-stone-500 uppercase tracking-wider">Rincian Menu Terjual</h3>
+            <span id="reportMenuCountBadge" class="text-[11px] font-bold text-coral bg-coral/10 px-2 py-0.5 rounded-full">0 Varian</span>
+          </div>
+
+          <div id="reportMenuList" class="space-y-2">
+            <!-- Rendered via JavaScript -->
+          </div>
+
+          <div id="reportEmptyMenuNotice" class="hidden py-8 text-center bg-stone-50 rounded-2xl border border-dashed border-stone-200">
+            <p class="text-xs font-bold text-stone-500">Belum ada pesanan selesai pada tanggal ini</p>
+            <p class="text-[11px] text-stone-400 mt-0.5">Pesanan yang ditandai "Selesai" otomatis dihitung ke laporan harian.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-stone-200 bg-stone-50 flex items-center justify-between text-xs">
+        <span class="text-stone-500">Rekap sinkron otomatis tiap pesanan selesai.</span>
+        <button id="btnCloseDailyReportFooter" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold rounded-xl transition-colors">
+          Tutup Rekap
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL KONFIRMASI HAPUS PESANAN ==================== -->
+  <div id="deleteConfirmModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl text-center border border-stone-200 animate-in zoom-in-95 duration-150">
+      <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </div>
+
+      <h3 class="text-lg font-black text-charcoal" id="deleteModalTitle">Hapus Pesanan dari Cloud?</h3>
+      <p class="text-xs text-stone-500 mt-1 mb-5" id="deleteModalDesc">
+        Pesanan akan dihapus permanen dari antrean dan database Cloud Firestore.
+      </p>
+
+      <div class="grid grid-cols-2 gap-3">
+        <button 
+          id="btnCancelDelete" 
+          type="button" 
+          class="py-3 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold rounded-xl text-xs transition-colors tap-target"
+        >
+          Batal
+        </button>
+        <button 
+          id="btnConfirmDelete" 
+          type="button" 
+          class="py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl text-xs shadow-md transition-colors tap-target"
+        >
+          Ya, Hapus
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DRAWER KONTROL STOK MENU ==================== -->
+  <div id="stockDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex justify-end">
+    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
+      
+      <!-- Drawer Header -->
+      <div class="p-4 border-b border-stone-200 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-kedondong/10 text-kedondong flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="font-bold text-base text-charcoal">Kontrol Ketersediaan Menu</h2>
+            <p class="text-[11px] text-stone-400">Atur ketersediaan menu secara langsung ke katalog pembeli</p>
+          </div>
+        </div>
+        <button id="btnCloseStockDrawer" class="p-2 text-stone-400 hover:text-charcoal rounded-full tap-target">
+          ✕
+        </button>
+      </div>
+
+      <!-- Drawer Content -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3" id="stockListContainer">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="p-4 border-t border-stone-200 bg-stone-50">
+        <p class="text-[11px] text-stone-500 text-center">
+          Menu yang ditandai <strong>"Habis"</strong> otomatis menonaktifkan tombol pesan di halaman pembeli.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toastMessage" class="fixed bottom-5 right-5 z-50 hidden bg-stone-900 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 border border-stone-800 transition-all duration-300">
+    <span id="toastIcon">✨</span>
+    <span id="toastText">Pesan pemberitahuan</span>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-stone-900 text-stone-400 text-xs py-6 mt-12 border-t border-stone-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="text-center sm:text-left">
+        <p class="text-stone-200 font-bold text-sm">RUJAKIN Kitchen Display System</p>
+        <p class="mt-0.5">Operasional Dapur & Manajemen Pesanan Real-Time</p>
+      </div>
+      <div class="flex items-center gap-4 text-stone-400 text-xs">
+        <a href="index.html" class="hover:text-white transition-colors underline">Buka Portal Pembeli</a>
+        <span>•</span>
+        <button type="button" onclick="window.testAudioChime()" class="hover:text-coral transition-colors font-medium">Tes Suara Bel</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== LOGIKA JAVASCRIPT ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { initializeFirestore, collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // 1. Konfigurasi Firebase Proyek Anda
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1UVr0NWTX-mzFMy1wTVyi2Jk674t9mWA",
+      authDomain: "rujakin-nusantara.firebaseapp.com",
+      projectId: "rujakin-nusantara",
+      storageBucket: "rujakin-nusantara.firebasestorage.app",
+      messagingSenderId: "1031310094509",
+      appId: "1:1031310094509:web:f18ec3d7bea32ad39a5624"
+    };
+
+    // PIN Default Kasir
+    const KITCHEN_PIN = "1234";
+
+    // Data Master Menu (Sesuai Katalog di index.html)
+    const MENU_ITEMS = [
+      { id: "rjk-surabaya", name: "Rujak Manis Surabaya", price: 22000, available: true },
+      { id: "rjk-bebeg", name: "Rujak Ulek Bebeg Cirebon", price: 18000, available: true },
+      { id: "rjk-pindang", name: "Rujak Kuah Pindang Bali", price: 20000, available: true },
+      { id: "rjk-cingur", name: "Rujak Cingur Istimewa", price: 28000, available: true },
+      { id: "rjk-juhi", name: "Rujak Juhi Gurih Betawi", price: 26000, available: true },
+      { id: "rjk-natsepa", name: "Rujak Buah Natsepa Ambon", price: 24000, available: true }
+    ];
+
+    // Pesanan Demo Awal (Memastikan panel preview langsung hidup & dapat dicoba seketika)
+    const DEMO_ORDERS = [
+      {
+        orderId: "RJK-2041",
+        customerName: "Budi Santoso",
+        customerPhone: "6281299887766",
+        serviceType: "delivery",
+        deliveryAddress: "Jl. Melati No. 14, RT 02/05, Kebayoran Baru",
+        paymentMethod: "qris",
+        items: [
+          {
+            name: "Rujak Manis Surabaya",
+            quantity: 2,
+            price: 22000,
+            spiceLevel: "3 Cabai (Pedas Mantap)",
+            nutTexture: "Kacang Kasar (Crunchy)",
+            saucePos: "Bumbu Dipisah",
+            notes: "Banyakin mangga muda dan jambunya ya kak"
+          }
+        ],
+        subtotal: 44000,
+        deliveryFee: 10000,
+        grandTotal: 54000,
+        status: "antrean",
+        createdAt: new Date().toISOString()
+      },
+      {
+        orderId: "RJK-1980",
+        customerName: "Siti Rahma",
+        customerPhone: "6285711223344",
+        serviceType: "pickup",
+        deliveryAddress: "Ambil Sendiri di Kedai",
+        paymentMethod: "cod",
+        items: [
+          {
+            name: "Rujak Cingur Istimewa",
+            quantity: 1,
+            price: 28000,
+            spiceLevel: "2 Cabai (Sedang Pas)",
+            nutTexture: "Kacang Halus (Creamy)",
+            saucePos: "Dicampur Langsung",
+            notes: "Cingurnya dipotong kecil-kecil"
+          }
+        ],
+        subtotal: 28000,
+        deliveryFee: 0,
+        grandTotal: 28000,
+        status: "diracik",
+        createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString()
+      },
+      {
+        orderId: "RJK-1855",
+        customerName: "Dewi Lestari",
+        customerPhone: "6287812345678",
+        serviceType: "delivery",
+        deliveryAddress: "Komplek Palem Asri Blok C2",
+        paymentMethod: "qris",
+        items: [
+          {
+            name: "Rujak Kuah Pindang Bali",
+            quantity: 2,
+            price: 20000,
+            spiceLevel: "4 Cabai (Pedas Nampol)",
+            nutTexture: "Tanpa Kacang",
+            saucePos: "Dicampur Langsung",
+            notes: "Kuah pindangnya agak banyak"
+          }
+        ],
+        subtotal: 40000,
+        deliveryFee: 10000,
+        grandTotal: 48000,
+        status: "selesai",
+        createdAt: new Date(Date.now() - 60 * 60 * 1000).toISOString()
+      }
+    ];
+
+    // State Aplikasi Dapur
+    let isUnlocked = false;
+    let currentFilter = "all";
+    let ordersData = [...DEMO_ORDERS];
+    let knownOrderIds = new Set(DEMO_ORDERS.map(o => o.orderId));
+    let soundEnabled = true;
+    let soundSynth = null;
+    let isFirstLoad = true;
+
+    // State Laporan Harian (0 = Hari Ini, -1 = Kemarin)
+    let reportDayOffset = 0;
+
+    // Helper Pengecekan Tanggal Kalender yang Sama
+    function isSameCalendarDay(date1, date2) {
+      return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+      );
+    }
+
+    // Helper Ekstraksi Jumlah Cabai dari Pilihan Tingkat Pedas
+    function extractChiliCount(spiceLevelStr) {
+      if (!spiceLevelStr) return 0;
+      const match = String(spiceLevelStr).match(/(\d+)/);
+      return match ? parseInt(match[1], 10) : 0;
+    }
+
+    // Format Rupiah
+    function formatRupiah(num) {
+      return "Rp " + Number(num || 0).toLocaleString("id-ID");
+    }
+
+    // Inisialisasi Tone.js Audio Synth (Sintesis Suara Bel)
+    function initSoundEngine() {
+      if (!soundSynth && window.Tone) {
+        soundSynth = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: "sine" },
+          envelope: { attack: 0.005, decay: 0.25, sustain: 0.05, release: 0.8 }
+        }).toDestination();
+        soundSynth.volume.value = -4;
+      }
+    }
+
+    // Mainkan Bel Pesanan Baru (2 Nada Harmonis)
+    function playNewOrderChime() {
+      if (!soundEnabled) return;
+      try {
+        initSoundEngine();
+        if (window.Tone && Tone.context.state !== "running") {
+          Tone.context.resume();
+        }
+        if (soundSynth) {
+          const now = Tone.now();
+          soundSynth.triggerAttackRelease("E5", "8n", now);
+          soundSynth.triggerAttackRelease("G5", "8n", now + 0.12);
+        }
+      } catch (err) {
+        console.warn("Gagal memainkan bel audio:", err.message);
+      }
+    }
+
+    // Fungsi Tes Bel
+    window.testAudioChime = function() {
+      playNewOrderChime();
+      showToast("🔔 Suara bel berbunyi!");
+    };
+
+    // Toast Notification Kustom
+    function showToast(message, icon = "✨") {
+      const toast = document.getElementById("toastMessage");
+      const toastText = document.getElementById("toastText");
+      const toastIcon = document.getElementById("toastIcon");
+
+      toastText.innerText = message;
+      toastIcon.innerText = icon;
+      toast.classList.remove("hidden");
+
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3000);
+    }
+
+    // Keypad PIN Helpers
+    window.appendPinNumber = function(digit) {
+      const pinInput = document.getElementById("inputPin");
+      if (pinInput.value.length < 4) {
+        pinInput.value += digit;
+      }
+    };
+    window.clearPinNumber = function() {
+      document.getElementById("inputPin").value = "";
+      document.getElementById("pinErrorMessage").classList.add("hidden");
+    };
+    window.backspacePinNumber = function() {
+      const pinInput = document.getElementById("inputPin");
+      pinInput.value = pinInput.value.slice(0, -1);
+    };
+
+    // Buka Kunci Dapur
+    function unlockKitchen() {
+      const entered = document.getElementById("inputPin").value;
+      const errorMsg = document.getElementById("pinErrorMessage");
+
+      if (entered === KITCHEN_PIN) {
+        isUnlocked = true;
+        document.getElementById("pinLockScreen").classList.add("hidden");
+        errorMsg.classList.add("hidden");
+
+        // Aktifkan Audio Context Tone.js dengan gesture klik
+        if (window.Tone) {
+          Tone.start();
+          initSoundEngine();
+        }
+        showToast("Panel dapur terbuka. Siap memproses pesanan!", "👩‍🍳");
+      } else {
+        errorMsg.classList.remove("hidden");
+        document.getElementById("inputPin").value = "";
+      }
+    }
+
+    document.getElementById("btnUnlockKitchen").addEventListener("click", unlockKitchen);
+    document.getElementById("inputPin").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") unlockKitchen();
+    });
+
+    // Kunci Layar Kembali
+    document.getElementById("btnLockScreen").addEventListener("click", () => {
+      isUnlocked = false;
+      document.getElementById("inputPin").value = "";
+      document.getElementById("pinLockScreen").classList.remove("hidden");
+      showToast("Layar dapur terkunci kembali", "🔒");
+    });
+
+    // Toggle Suara Bel
+    document.getElementById("btnToggleSound").addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById("soundIcon").innerText = soundEnabled ? "🔔" : "🔕";
+      document.getElementById("soundText").innerText = soundEnabled ? "Bel Aktif" : "Bel Hening";
+      showToast(soundEnabled ? "Notifikasi audio bel dinyalakan" : "Notifikasi audio bel dimatikan");
+    });
+
+    // Perbarui Metrik Dapur
+    function updateMetrics() {
+      const activeCount = ordersData.filter(o => o.status === "antrean" || o.status === "diracik").length;
+      
+      // Omset Hari Ini (Kalender 24 Jam 00:00 - 23:59)
+      const today = new Date();
+      const finishedToday = ordersData.filter(o => {
+        if (o.status !== "selesai") return false;
+        const orderDate = new Date(o.createdAt || Date.now());
+        return isSameCalendarDay(orderDate, today);
+      });
+      const todayRevenue = finishedToday.reduce((sum, o) => sum + (Number(o.grandTotal) || 0), 0);
+      const availableMenuCount = MENU_ITEMS.filter(m => m.available).length;
+
+      document.getElementById("statActiveOrders").innerText = activeCount;
+      document.getElementById("statTotalRevenue").innerText = formatRupiah(todayRevenue);
+      document.getElementById("statActiveMenuCount").innerText = `${availableMenuCount} / ${MENU_ITEMS.length}`;
+
+      // Perbarui juga data rekap modal jika sedang terbuka
+      if (!document.getElementById("dailyReportModal").classList.contains("hidden")) {
+        renderDailyReport();
+      }
+    }
+
+    // Render Kartu Pesanan di Papan
+    function renderOrders() {
+      const grid = document.getElementById("ordersGrid");
+      const emptyState = document.getElementById("emptyOrdersNotice");
+
+      const filtered = ordersData.filter(order => {
+        if (currentFilter === "all") return true;
+        return order.status === currentFilter;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      grid.innerHTML = filtered.map(order => {
+        const isDelivery = order.serviceType === "delivery";
+        const isQris = order.paymentMethod === "qris";
+
+        // Status Styling & Text
+        let statusBadge = "";
+        let actionButtons = "";
+
+        if (order.status === "antrean") {
+          statusBadge = `<span class="bg-amber-100 text-amber-800 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Menunggu Diracik</span>`;
+          actionButtons = `
+            <button 
+              onclick="window.changeOrderStatus('${order.orderId}', 'diracik')"
+              class="w-full py-2.5 bg-coral hover:bg-coral-dark text-white font-bold text-xs rounded-xl shadow-sm transition-all tap-target flex items-center justify-center gap-1.5"
+            >
+              <span>Mulai Racik Bumbu</span>
+            </button>
+          `;
+        } else if (order.status === "diracik") {
+          statusBadge = `<span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">Sedang Diracik</span>`;
+          actionButtons = `
+            <button 
+              onclick="window.changeOrderStatus('${order.orderId}', 'selesai')"
+              class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all tap-target flex items-center justify-center gap-1.5"
+            >
+              <span>Selesaikan Pesanan</span>
+            </button>
+          `;
+        } else {
+          statusBadge = `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Selesai</span>`;
+          actionButtons = `
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] text-emerald-700 font-bold">Pesanan Telah Tuntas</span>
+              <button 
+                onclick="window.promptDeleteOrder('${order.orderId}')"
+                class="px-2.5 py-1.5 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-bold transition-all tap-target flex items-center gap-1"
+                title="Hapus permanen dari Firebase"
+              >
+                <span>🗑️</span>
+                <span>Hapus</span>
+              </button>
+            </div>
+          `;
+        }
+
+        // WhatsApp Clean Link
+        const rawPhone = order.customerPhone ? String(order.customerPhone) : "";
+        const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
+        const waLink = cleanPhone ? `https://wa.me/${cleanPhone}` : "#";
+
+        return `
+          <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+            <div>
+              <!-- Header Kartu -->
+              <div class="flex items-start justify-between gap-2 mb-3">
+                <div>
+                  <span class="text-xs font-bold text-stone-400">Nota:</span>
+                  <span class="font-extrabold text-charcoal text-sm ml-1">${order.orderId}</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  ${statusBadge}
+                  <button 
+                    onclick="window.promptDeleteOrder('${order.orderId}')"
+                    class="p-1 rounded-lg text-stone-400 hover:text-red-500 hover:bg-red-50 transition-colors tap-target"
+                    title="Hapus dari riwayat & Firebase"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Data Pelanggan -->
+              <div class="p-3 bg-stone-50 rounded-xl mb-3 space-y-1 text-xs">
+                <div class="flex items-center justify-between font-bold text-charcoal">
+                  <span>${order.customerName || "Pelanggan"}</span>
+                  ${cleanPhone ? `
+                    <a href="${waLink}" target="_blank" class="text-emerald-600 font-bold hover:underline flex items-center gap-1 text-[11px]">
+                      <span>WhatsApp</span>
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                    </a>
+                  ` : ""}
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${isDelivery ? "bg-amber-100 text-amber-800" : "bg-purple-100 text-purple-800"}">
+                    ${isDelivery ? "🛵 Diantar Kurir" : "🏪 Ambil di Kedai"}
+                  </span>
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${isQris ? "bg-blue-100 text-blue-800" : "bg-stone-200 text-stone-700"}">
+                    ${isQris ? "💳 QRIS / Transfer" : "💵 Tunai COD"}
+                  </span>
+                </div>
+
+                ${isDelivery && order.deliveryAddress ? `
+                  <p class="text-stone-500 text-[11px] pt-1">
+                    📍 ${order.deliveryAddress}
+                  </p>
+                ` : ""}
+              </div>
+
+              <!-- Rincian Menu & Racikan Bumbu -->
+              <div class="space-y-2 mb-4">
+                <p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider">Daftar Racikan:</p>
+                ${(order.items || []).map((item, idx) => `
+                  <div class="p-2.5 bg-white rounded-xl border border-stone-200 text-xs">
+                    <div class="flex justify-between font-bold text-charcoal">
+                      <span>${idx + 1}. ${item.name}</span>
+                      <span class="text-coral">x${item.quantity}</span>
+                    </div>
+                    <div class="text-[11px] text-stone-600 mt-1 space-y-0.5">
+                      <p>🌶️ <strong>Level:</strong> ${item.spiceLevel}</p>
+                      <p>🥜 <strong>Tekstur:</strong> ${item.nutTexture} (${item.saucePos})</p>
+                      ${item.notes ? `<p class="text-amber-800 italic bg-amber-50 px-1.5 py-0.5 rounded mt-0.5">📝 "${item.notes}"</p>` : ""}
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+
+            <!-- Footer Kartu -->
+            <div class="pt-3 border-t border-stone-100 space-y-3">
+              <div class="flex justify-between items-baseline text-xs">
+                <span class="text-stone-400">Total Pembayaran:</span>
+                <span class="text-base font-black text-coral">${formatRupiah(order.grandTotal)}</span>
+              </div>
+              ${actionButtons}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Ubah Status Pesanan
+    window.changeOrderStatus = async function(orderId, newStatus) {
+      const target = ordersData.find(o => o.orderId === orderId);
+      if (target) {
+        target.status = newStatus;
+        renderOrders();
+        updateMetrics();
+      }
+
+      if (db) {
+        try {
+          await updateDoc(doc(db, "orders", orderId), {
+            status: newStatus,
+            updatedAt: new Date().toISOString()
+          });
+          showToast(`Status pesanan ${orderId} berhasil diperbarui!`, "✅");
+        } catch (e) {
+          console.warn("Update lokal Firestore:", e.message);
+        }
+      }
+    };
+
+    // Kalkulasi dan Render Rekap Statistik 24 Jam
+    function renderDailyReport() {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + reportDayOffset);
+
+      // Label Subtitle Tanggal
+      const dateOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+      const formattedDate = targetDate.toLocaleDateString("id-ID", dateOptions);
+      document.getElementById("reportDateSubtitle").innerText = `${reportDayOffset === 0 ? "Hari Ini" : "Kemarin"} • ${formattedDate}`;
+
+      // Filter pesanan selesai di tanggal yang dipilih
+      const targetFinishedOrders = ordersData.filter(order => {
+        if (order.status !== "selesai") return false;
+        const orderDate = new Date(order.createdAt || Date.now());
+        return isSameCalendarDay(orderDate, targetDate);
+      });
+
+      // 1. Ringkasan Total
+      const totalOmset = targetFinishedOrders.reduce((sum, o) => sum + (Number(o.grandTotal) || 0), 0);
+      const successOrderCount = targetFinishedOrders.length;
+
+      let totalPortions = 0;
+      let totalChili = 0;
+      let qrisTotal = 0;
+      let qrisCount = 0;
+      let codTotal = 0;
+      let codCount = 0;
+      const menuSalesMap = {};
+
+      targetFinishedOrders.forEach(order => {
+        // Metode Pembayaran
+        const grand = Number(order.grandTotal) || 0;
+        if (order.paymentMethod === "qris") {
+          qrisTotal += grand;
+          qrisCount++;
+        } else {
+          codTotal += grand;
+          codCount++;
+        }
+
+        // Hitung Item & Cabai
+        (order.items || []).forEach(item => {
+          const qty = Number(item.quantity) || 1;
+          const itemPrice = Number(item.price) || 0;
+          totalPortions += qty;
+
+          // Cabai
+          const chiliPerPortion = extractChiliCount(item.spiceLevel);
+          totalChili += (chiliPerPortion * qty);
+
+          // Breakdown Menu
+          if (!menuSalesMap[item.name]) {
+            menuSalesMap[item.name] = {
+              name: item.name,
+              portions: 0,
+              subtotal: 0
+            };
+          }
+          menuSalesMap[item.name].portions += qty;
+          menuSalesMap[item.name].subtotal += (itemPrice * qty);
+        });
+      });
+
+      // Tampilkan ke DOM
+      document.getElementById("reportTotalOmset").innerText = formatRupiah(totalOmset);
+      document.getElementById("reportSuccessOrders").innerText = `${successOrderCount} Order`;
+      document.getElementById("reportTotalPortions").innerText = `${totalPortions} Porsi`;
+      document.getElementById("reportTotalChili").innerText = `${totalChili} Butir`;
+
+      document.getElementById("reportQrisTotal").innerText = formatRupiah(qrisTotal);
+      document.getElementById("reportQrisCount").innerText = `${qrisCount} transaksi lunas`;
+      document.getElementById("reportCodTotal").innerText = formatRupiah(codTotal);
+      document.getElementById("reportCodCount").innerText = `${codCount} transaksi tunai`;
+
+      // Render Daftar Menu Terlaris (Urut dari terbanyak laku)
+      const menuListContainer = document.getElementById("reportMenuList");
+      const emptyNotice = document.getElementById("reportEmptyMenuNotice");
+      const menuArray = Object.values(menuSalesMap).sort((a, b) => b.portions - a.portions);
+
+      document.getElementById("reportMenuCountBadge").innerText = `${menuArray.length} Varian Terjual`;
+
+      if (menuArray.length === 0) {
+        menuListContainer.innerHTML = "";
+        emptyNotice.classList.remove("hidden");
+      } else {
+        emptyNotice.classList.add("hidden");
+        menuListContainer.innerHTML = menuArray.map((item, index) => {
+          const rankColor = index === 0 ? "bg-amber-100 text-amber-800" : "bg-stone-100 text-stone-700";
+          return `
+            <div class="p-3 bg-white rounded-xl border border-stone-200 flex items-center justify-between gap-3 shadow-2xs">
+              <div class="flex items-center gap-2.5">
+                <span class="w-6 h-6 rounded-lg ${rankColor} text-xs font-black flex items-center justify-center">
+                  ${index + 1}
+                </span>
+                <div>
+                  <h4 class="text-xs font-bold text-charcoal">${item.name}</h4>
+                  <span class="text-[11px] text-stone-400">Total pendapatan: ${formatRupiah(item.subtotal)}</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-black text-coral bg-coral/10 px-2.5 py-1 rounded-lg inline-block">
+                  ${item.portions} porsi
+                </span>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
+    }
+
+    // Event Listeners Modal Rekap Harian
+    window.openDailyReportModal = function() {
+      reportDayOffset = 0;
+      updateReportFilterUI();
+      renderDailyReport();
+      document.getElementById("dailyReportModal").classList.remove("hidden");
+    };
+
+    function closeDailyReportModal() {
+      document.getElementById("dailyReportModal").classList.add("hidden");
+    }
+
+    function updateReportFilterUI() {
+      const btnToday = document.getElementById("btnFilterReportToday");
+      const btnYesterday = document.getElementById("btnFilterReportYesterday");
+
+      if (reportDayOffset === 0) {
+        btnToday.className = "px-3 py-1.5 rounded-lg bg-white text-charcoal shadow-xs transition-all";
+        btnYesterday.className = "px-3 py-1.5 rounded-lg text-stone-600 hover:text-charcoal transition-all";
+      } else {
+        btnToday.className = "px-3 py-1.5 rounded-lg text-stone-600 hover:text-charcoal transition-all";
+        btnYesterday.className = "px-3 py-1.5 rounded-lg bg-white text-charcoal shadow-xs transition-all";
+      }
+    }
+
+    document.getElementById("btnOpenDailyReport").addEventListener("click", window.openDailyReportModal);
+    document.getElementById("cardRevenueTrigger").addEventListener("click", window.openDailyReportModal);
+    document.getElementById("btnCloseDailyReport").addEventListener("click", closeDailyReportModal);
+    document.getElementById("btnCloseDailyReportFooter").addEventListener("click", closeDailyReportModal);
+
+    document.getElementById("btnFilterReportToday").addEventListener("click", () => {
+      reportDayOffset = 0;
+      updateReportFilterUI();
+      renderDailyReport();
+    });
+
+    document.getElementById("btnFilterReportYesterday").addEventListener("click", () => {
+      reportDayOffset = -1;
+      updateReportFilterUI();
+      renderDailyReport();
+    });
+
+    // Render Daftar Saklar Stok Menu
+    function renderStockDrawer() {
+      const container = document.getElementById("stockListContainer");
+      container.innerHTML = MENU_ITEMS.map(item => `
+        <div class="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 flex items-center justify-between gap-3">
+          <div>
+            <h4 class="font-bold text-xs text-charcoal">${item.name}</h4>
+            <p class="text-[11px] text-stone-400">${formatRupiah(item.price)}</p>
+          </div>
+          <button 
+            onclick="window.toggleMenuItemStock('${item.id}')"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all tap-target ${
+              item.available 
+                ? "bg-kedondong text-white hover:bg-kedondong-dark" 
+                : "bg-red-500 text-white hover:bg-red-600"
+            }"
+          >
+            ${item.available ? "Tersedia" : "Habis"}
+          </button>
+        </div>
+      `).join("");
+    }
+
+    // Toggle Stok Menu
+    window.toggleMenuItemStock = async function(productId) {
+      const item = MENU_ITEMS.find(m => m.id === productId);
+      if (!item) return;
+
+      item.available = !item.available;
+      renderStockDrawer();
+      updateMetrics();
+
+      if (db) {
+        try {
+          const payload = {};
+          MENU_ITEMS.forEach(m => payload[m.id] = m.available);
+          await setDoc(doc(db, "settings", "inventory"), payload, { merge: true });
+          showToast(`Status ${item.name} diubah jadi ${item.available ? "Tersedia" : "Habis"}`, item.available ? "🍏" : "🛑");
+        } catch (e) {
+          console.warn("Simpan stok lokal:", e.message);
+        }
+      }
+    };
+
+    // Drawer Kontrol Stok
+    document.getElementById("btnOpenStockModal").addEventListener("click", () => {
+      renderStockDrawer();
+      document.getElementById("stockDrawer").classList.remove("hidden");
+    });
+    document.getElementById("btnCloseStockDrawer").addEventListener("click", () => {
+      document.getElementById("stockDrawer").classList.add("hidden");
+    });
+
+    // Filter Status Antrean
+    document.querySelectorAll(".tab-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-filter-btn").forEach(b => {
+          b.className = "tab-filter-btn px-4 py-2 rounded-lg text-xs font-bold text-stone-600 hover:text-charcoal transition-all";
+        });
+        btn.className = "tab-filter-btn px-4 py-2 rounded-lg text-xs font-bold bg-white text-charcoal shadow-sm transition-all";
+        currentFilter = btn.getAttribute("data-status");
+
+        // Tampilkan tombol bersihkan jika di tab selesai
+        const clearBtn = document.getElementById("btnClearCompletedOrders");
+        if (clearBtn) {
+          if (currentFilter === "selesai") {
+            clearBtn.classList.remove("hidden");
+          } else {
+            clearBtn.classList.add("hidden");
+          }
+        }
+
+        renderOrders();
+      });
+    });
+
+    // ==================== LOGIKA HAPUS HISTORI KE FIREBASE ====================
+    let pendingDeleteOrderId = null;
+    let isBulkDelete = false;
+
+    // Buka Modal Konfirmasi Hapus Per Nota
+    window.promptDeleteOrder = function(orderId) {
+      pendingDeleteOrderId = orderId;
+      isBulkDelete = false;
+      document.getElementById("deleteModalTitle").innerText = "Hapus Riwayat Pesanan?";
+      document.getElementById("deleteModalDesc").innerHTML = `Pesanan <strong class="text-charcoal font-bold">${orderId}</strong> akan dihapus permanen dari memori dan database Cloud Firestore.`;
+      document.getElementById("deleteConfirmModal").classList.remove("hidden");
+    };
+
+    // Buka Modal Konfirmasi Hapus Semua Selesai
+    window.promptClearAllCompleted = function() {
+      const completedOrders = ordersData.filter(o => o.status === "selesai");
+      if (completedOrders.length === 0) {
+        showToast("Tidak ada riwayat pesanan selesai untuk dihapus", "ℹ️");
+        return;
+      }
+      pendingDeleteOrderId = null;
+      isBulkDelete = true;
+      document.getElementById("deleteModalTitle").innerText = "Bersihkan Semua Riwayat Selesai?";
+      document.getElementById("deleteModalDesc").innerHTML = `Sebanyak <strong class="text-charcoal font-bold">${completedOrders.length} pesanan selesai</strong> akan dihapus permanen dari Cloud Firestore. Tindakan ini tidak dapat dibatalkan.`;
+      document.getElementById("deleteConfirmModal").classList.remove("hidden");
+    };
+
+    // Batal Hapus
+    document.getElementById("btnCancelDelete").addEventListener("click", () => {
+      document.getElementById("deleteConfirmModal").classList.add("hidden");
+      pendingDeleteOrderId = null;
+      isBulkDelete = false;
+    });
+
+    // Konfirmasi Eksekusi Hapus
+    document.getElementById("btnConfirmDelete").addEventListener("click", async () => {
+      document.getElementById("deleteConfirmModal").classList.add("hidden");
+
+      if (isBulkDelete) {
+        const completedOrders = ordersData.filter(o => o.status === "selesai");
+        ordersData = ordersData.filter(o => o.status !== "selesai");
+        renderOrders();
+        updateMetrics();
+
+        if (db) {
+          try {
+            const deletePromises = completedOrders.map(order => deleteDoc(doc(db, "orders", order.orderId)));
+            await Promise.all(deletePromises);
+            showToast(`${completedOrders.length} pesanan berhasil dihapus dari cloud!`, "🗑️");
+          } catch (err) {
+            showToast("Gagal menghapus sebagian pesanan dari cloud", "⚠️");
+          }
+        } else {
+          showToast(`${completedOrders.length} pesanan selesai dihapus dari memori`, "🗑️");
+        }
+      } else if (pendingDeleteOrderId) {
+        const idToDelete = pendingDeleteOrderId;
+        pendingDeleteOrderId = null;
+
+        ordersData = ordersData.filter(o => o.orderId !== idToDelete);
+        renderOrders();
+        updateMetrics();
+
+        if (db) {
+          try {
+            await deleteDoc(doc(db, "orders", idToDelete));
+            showToast(`Pesanan ${idToDelete} berhasil dihapus dari cloud!`, "🗑️");
+          } catch (err) {
+            showToast("Gagal menghapus dari cloud: " + err.message, "⚠️");
+          }
+        } else {
+          showToast(`Pesanan ${idToDelete} berhasil dihapus!`, "🗑️");
+        }
+      }
+    });
+
+    // Inisialisasi Database Firebase dengan Long Polling
+    let db = null;
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = initializeFirestore(app, { experimentalForceLongPolling: true });
+      const auth = getAuth(app);
+      signInAnonymously(auth).catch(() => console.log("Mode offline dapur"));
+
+      // Listener Antrean Pesanan Realtime
+      const ordersRef = collection(db, "orders");
+      onSnapshot(ordersRef, (snapshot) => {
+        const cloudList = [];
+        snapshot.forEach(docSnap => {
+          cloudList.push({ ...docSnap.data(), orderId: docSnap.id });
+        });
+
+        if (cloudList.length > 0) {
+          cloudList.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+          if (!isFirstLoad) {
+            let hasNewIncoming = false;
+            cloudList.forEach(order => {
+              if (!knownOrderIds.has(order.orderId) && order.status === "antrean") {
+                hasNewIncoming = true;
+              }
+            });
+            if (hasNewIncoming) {
+              playNewOrderChime();
+              showToast("Pesanan baru masuk ke antrean!", "🌶️");
+            }
+          }
+
+          knownOrderIds = new Set(cloudList.map(o => o.orderId));
+          ordersData = cloudList;
+          isFirstLoad = false;
+          renderOrders();
+          updateMetrics();
+        }
+      }, (err) => {
+        console.log("Menggunakan antrean lokal:", err.message);
+      });
+
+      // Listener Status Stok
+      onSnapshot(doc(db, "settings", "inventory"), (docSnap) => {
+        if (docSnap.exists()) {
+          const stockData = docSnap.data();
+          MENU_ITEMS.forEach(item => {
+            if (stockData[item.id] !== undefined) {
+              item.available = stockData[item.id];
+            }
+          });
+          renderStockDrawer();
+          updateMetrics();
+        }
+      }, (err) => console.log("Stok lokal:", err.message));
+
+    } catch (e) {
+      console.warn("Koneksi Firebase lokal:", e.message);
+    }
+
+    // Tampilkan Tampilan Awal
+    renderOrders();
+    updateMetrics();
+    renderStockDrawer();
+  </script>
+</body>
+</html>
