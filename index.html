@@ -1,40 +1,19 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>RUJAKIN - Pesan Rujak Nusantara Segar</title>
-  
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            cream: '#FAF8F5',
-            charcoal: '#232723',
-            coral: '#FF6B4A',
-            'coral-dark': '#E05334',
-            kedondong: '#5B8C5A',
-            'kedondong-dark': '#487247'
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- Google Font: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
   <style>
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
       background-color: #FAF8F5;
       color: #232723;
-      overflow-x: hidden;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -43,728 +22,446 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    .tap-target {
-      min-height: 44px;
-      min-width: 44px;
-    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-coral selection:text-white">
+<body class="min-h-screen flex flex-col antialiased pb-24 md:pb-12 text-[#232723]">
 
-  <!-- ==================== STICKY HEADER ==================== -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200 shadow-sm transition-all">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
-      
-      <!-- Brand Logo -->
-      <a href="#" onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;" class="flex items-center gap-2 group cursor-pointer flex-shrink-0">
-        <div class="w-10 h-10 rounded-xl bg-coral flex items-center justify-center text-white shadow-sm group-hover:scale-105 transition-transform">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0l2-4m-2 4l-2-4" />
-          </svg>
-        </div>
-        <div>
-          <span class="text-xl font-extrabold tracking-tight text-charcoal">RUJAK<span class="text-coral">IN</span></span>
-        </div>
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-stone-200/80">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
+      <!-- Logo -->
+      <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="text-2xl font-extrabold tracking-tight text-[#FF6B4A] hover:opacity-90 transition-opacity">
+        RUJAKIN
       </a>
 
-      <!-- Quick Search Bar -->
-      <div class="flex-1 max-w-md mx-2 hidden sm:block">
-        <div class="relative">
-          <input 
-            type="text" 
-            id="searchInput"
-            placeholder="Cari rujak manis, ulek, cingur..." 
-            class="w-full pl-9 pr-4 py-2 bg-stone-100 border border-transparent rounded-full text-sm focus:bg-white focus:border-coral focus:outline-none transition-all"
-          >
-          <svg class="w-4 h-4 text-stone-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </div>
-      </div>
-
-      <!-- Action Navigation -->
-      <div class="flex items-center gap-1.5 sm:gap-2">
-        <!-- Tombol Akun / Riwayat Pelanggan -->
-        <button 
-          id="btnOpenAccountModal"
-          class="p-2 sm:px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-charcoal transition-all tap-target flex items-center justify-center gap-1.5 text-xs font-bold"
-          title="Akun & Riwayat Pesanan"
-        >
-          <div id="userAvatarIcon" class="w-5 h-5 rounded-full bg-stone-300 text-stone-700 flex items-center justify-center text-[10px] font-extrabold overflow-hidden">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          </div>
-          <span id="userAccountBtnLabel" class="hidden sm:inline">Masuk</span>
-        </button>
-
-        <!-- Tombol Lacak Pesanan Manual -->
-        <button 
-          id="btnOpenTrackModal"
-          class="p-2 sm:px-3 py-2 rounded-xl bg-stone-100 hover:bg-stone-200 text-charcoal transition-all tap-target flex items-center justify-center gap-1.5 text-xs font-bold"
-          title="Lacak Pesanan Saya"
-        >
-          <svg class="w-4 h-4 text-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-          </svg>
-          <span class="hidden sm:inline">Lacak</span>
-        </button>
-
-        <!-- Cart Button -->
-        <button 
-          id="btnOpenCart"
-          class="relative p-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-charcoal transition-all tap-target flex items-center justify-center"
-          aria-label="Buka Keranjang"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-          </svg>
-          <span 
-            id="cartCountBadge" 
-            class="hidden absolute -top-1 -right-1 bg-coral text-white text-[11px] font-bold w-5 h-5 rounded-full items-center justify-center ring-2 ring-white animate-pulse"
-          >
-            0
-          </span>
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Mobile Search Bar (Hanya tampil di ponsel) -->
-    <div class="px-4 pb-3 sm:hidden">
-      <div class="relative">
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-xs relative hidden sm:block">
         <input 
           type="text" 
-          id="searchInputMobile"
+          id="search-input" 
+          oninput="handleSearch(this.value)" 
           placeholder="Cari rujak manis, ulek, cingur..." 
-          class="w-full pl-9 pr-4 py-2 bg-stone-100 border border-transparent rounded-full text-xs focus:bg-white focus:border-coral focus:outline-none transition-all"
-        >
+          class="w-full bg-stone-100/80 border border-stone-200 text-xs rounded-full py-2 pl-9 pr-3 focus:outline-none focus:border-[#FF6B4A] transition-colors"
+        />
         <svg class="w-4 h-4 text-stone-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2">
+        <!-- Lacak Pesanan -->
+        <button onclick="openTrackerModal()" title="Lacak Pesanan" class="p-2.5 rounded-full border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 transition-colors flex items-center gap-1.5 text-xs font-semibold">
+          <svg class="w-4 h-4 text-[#FF6B4A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+          </svg>
+          <span class="hidden md:inline">Lacak</span>
+        </button>
+
+        <!-- Akun Pelanggan -->
+        <button onclick="openAccountModal()" id="btn-account-header" title="Akun Saya" class="p-2.5 rounded-full border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 transition-colors flex items-center gap-1.5 text-xs font-semibold">
+          <svg class="w-4 h-4 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          <span id="account-label-header" class="hidden md:inline">Masuk</span>
+        </button>
+
+        <!-- Tombol Keranjang -->
+        <button onclick="toggleCartDrawer(true)" class="relative p-2.5 rounded-full bg-[#FF6B4A] text-white hover:bg-[#e05637] transition-all flex items-center justify-center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          <span id="cart-badge-count" class="absolute -top-1 -right-1 bg-[#232723] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white scale-0 transition-transform duration-200">0</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- ==================== MAIN CONTENT ==================== -->
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+  <!-- SEARCH BAR (MOBILE ONLY) -->
+  <div class="px-4 pt-3 pb-1 sm:hidden max-w-5xl mx-auto w-full">
+    <div class="relative">
+      <input 
+        type="text" 
+        oninput="handleSearch(this.value)" 
+        placeholder="Cari rujak manis, ulek, cingur..." 
+        class="w-full bg-stone-100/90 border border-stone-200 text-xs rounded-xl py-2.5 pl-9 pr-3 focus:outline-none focus:border-[#FF6B4A]"
+      />
+      <svg class="w-4 h-4 text-stone-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </div>
+  </div>
 
-    <!-- LIVE ORDER TRACKER (Otomatis tampil jika pembeli memiliki pesanan aktif) -->
-    <section id="activeOrderTracker" class="hidden mb-6 bg-white rounded-2xl border border-stone-200 shadow-sm p-4 sm:p-5 transition-all">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-stone-100">
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-xs font-bold text-stone-500 uppercase tracking-wider">Status Pesanan Langsung</span>
-          </div>
-          <h2 class="text-base sm:text-lg font-extrabold text-charcoal mt-0.5">
-            Nota: <span id="trackOrderIdDisplay" class="text-coral">RJK-0000</span>
-          </h2>
-          <p id="trackOrderMetaDisplay" class="text-xs text-stone-500">Memuat status pesanan...</p>
-        </div>
+  <main class="max-w-5xl mx-auto px-4 pt-3 flex-1 w-full space-y-5">
 
+    <!-- LIVE TRACKER CARD -->
+    <section id="live-order-tracker-card" class="hidden bg-white border border-stone-200 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between pb-3 border-b border-stone-100">
         <div class="flex items-center gap-2">
-          <button 
-            id="btnCloseTracker" 
-            onclick="window.dismissActiveTracker()"
-            class="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-xs transition-all tap-target"
-          >
-            Tutup Pelacak
-          </button>
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-xs font-bold text-stone-800">Status Pesanan: <span id="tracker-order-id" class="text-[#FF6B4A] font-mono">#RJK-0000</span></span>
+        </div>
+        <button onclick="dismissActiveTracker()" class="text-stone-400 hover:text-stone-600 text-xs p-1">Tutup</button>
+      </div>
+
+      <!-- 3 Langkah Alur -->
+      <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+        <!-- Langkah 1: Diterima -->
+        <div class="flex flex-col items-center">
+          <div id="step-node-1" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[#FF6B4A] text-white transition-colors">1</div>
+          <span class="text-[11px] font-semibold text-stone-800 mt-1">Diterima</span>
+          <span class="text-[10px] text-stone-400">Masuk antrean</span>
+        </div>
+        <!-- Langkah 2: Sedang Diracik -->
+        <div class="flex flex-col items-center">
+          <div id="step-node-2" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-stone-200 text-stone-600 transition-colors">2</div>
+          <span class="text-[11px] font-semibold text-stone-800 mt-1">Sedang Diracik</span>
+          <span class="text-[10px] text-stone-400">Buah dipotong</span>
+        </div>
+        <!-- Langkah 3: Siap Dinikmati -->
+        <div class="flex flex-col items-center">
+          <div id="step-node-3" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-stone-200 text-stone-600 transition-colors">3</div>
+          <span class="text-[11px] font-semibold text-stone-800 mt-1">Siap Dinikmati</span>
+          <span class="text-[10px] text-stone-400">Siap diantar/ambil</span>
         </div>
       </div>
 
-      <!-- 3-Step Progress Stepper -->
-      <div class="pt-4 pb-1">
-        <div class="grid grid-cols-3 gap-2 relative">
-          <!-- Step 1: Diterima -->
-          <div class="flex flex-col items-center text-center space-y-1.5" id="stepNode1">
-            <div class="w-8 h-8 rounded-full border-2 border-coral bg-coral text-white text-xs font-bold flex items-center justify-center shadow-xs transition-all" id="stepIcon1">
-              1
-            </div>
-            <div>
-              <span class="text-xs font-bold text-charcoal block" id="stepText1">Diterima</span>
-              <span class="text-[10px] text-stone-400 block hidden sm:block">Dalam Antrean</span>
-            </div>
-          </div>
-
-          <!-- Step 2: Sedang Diracik -->
-          <div class="flex flex-col items-center text-center space-y-1.5" id="stepNode2">
-            <div class="w-8 h-8 rounded-full border-2 border-stone-300 bg-stone-100 text-stone-400 text-xs font-bold flex items-center justify-center shadow-xs transition-all" id="stepIcon2">
-              2
-            </div>
-            <div>
-              <span class="text-xs font-semibold text-stone-400 block" id="stepText2">Sedang Diracik</span>
-              <span class="text-[10px] text-stone-400 block hidden sm:block">Potong Buah & Bumbu</span>
-            </div>
-          </div>
-
-          <!-- Step 3: Selesai -->
-          <div class="flex flex-col items-center text-center space-y-1.5" id="stepNode3">
-            <div class="w-8 h-8 rounded-full border-2 border-stone-300 bg-stone-100 text-stone-400 text-xs font-bold flex items-center justify-center shadow-xs transition-all" id="stepIcon3">
-              3
-            </div>
-            <div>
-              <span class="text-xs font-semibold text-stone-400 block" id="stepText3">Siap Dinikmati</span>
-              <span class="text-[10px] text-stone-400 block hidden sm:block">Diantar / Ambil Kedai</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Status Context Message -->
-        <div class="mt-4 p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs flex items-center justify-between gap-2" id="trackStatusMessageBox">
-          <div class="flex items-center gap-2">
-            <span id="trackStatusDot" class="w-2 h-2 rounded-full bg-amber-500"></span>
-            <span id="trackStatusMessage" class="font-medium text-stone-700">Pesanan telah diterima kedai & menunggu antrean racikan.</span>
-          </div>
-        </div>
+      <div class="mt-3.5 bg-stone-50 rounded-xl p-2.5 text-center text-xs text-stone-600 border border-stone-100">
+        <p id="tracker-status-description">Pesananmu telah masuk ke antrean dapur kedai.</p>
       </div>
     </section>
 
-    <!-- Promo Hero Banner -->
-    <section class="mb-8 rounded-2xl bg-gradient-to-r from-coral to-amber-600 text-white p-5 sm:p-6 relative overflow-hidden shadow-md">
-      <div class="relative z-10 max-w-md">
-        <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight mb-1.5">
-          Pesan Rujak Nusantara Segar
-        </h1>
-        <p class="text-white/90 text-xs sm:text-sm leading-relaxed mb-3">
-          Potongan buah segar dengan racikan bumbu kacang gula aren asli. Sesuaikan level pedas dan bumbu sesukamu.
+    <!-- BANNER PROMOSI -->
+    <section class="bg-gradient-to-r from-[#FF6B4A] to-[#ff856a] rounded-2xl p-5 text-white shadow-sm relative overflow-hidden">
+      <div class="max-w-md relative z-10">
+        <span class="inline-block text-[11px] font-bold tracking-wider uppercase bg-white/20 px-2.5 py-0.5 rounded-full mb-2">Bumbu Ulek Asli</span>
+        <h1 class="text-xl sm:text-2xl font-black leading-tight">Pesan Rujak Nusantara Segar</h1>
+        <p class="text-xs sm:text-sm text-white/90 mt-1 leading-relaxed">
+          Kacang mete dan gula aren pilihan dengan tingkat kepedasan serta tekstur bumbu yang bisa kamu racik sesukamu.
         </p>
-        <div class="flex flex-wrap gap-2 text-[11px] font-medium text-white/90">
-          <span class="bg-black/15 px-2.5 py-1 rounded-md">Level 0 - 5 Cabai</span>
-          <span class="bg-black/15 px-2.5 py-1 rounded-md">Bumbu Pisah / Campur</span>
-          <span class="bg-black/15 px-2.5 py-1 rounded-md">Diantar & Ambil Sendiri</span>
+        <div class="flex flex-wrap gap-2 mt-3 text-[11px] font-medium text-white/90">
+          <span class="bg-black/15 px-2.5 py-1 rounded-lg">Level 0 - 5 Pedas</span>
+          <span class="bg-black/15 px-2.5 py-1 rounded-lg">Bumbu Pisah / Campur</span>
+          <span class="bg-black/15 px-2.5 py-1 rounded-lg">Diantar & Ambil Sendiri</span>
         </div>
-      </div>
-      <div class="absolute -right-6 -bottom-6 opacity-15 pointer-events-none">
-        <svg class="w-48 h-48 sm:w-56 sm:h-56" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-        </svg>
       </div>
     </section>
 
-    <!-- Category Filter Bar -->
-    <section class="mb-6">
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 pt-1" id="categoryList">
-        <button data-cat="all" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-coral text-white shadow-sm transition-all">
+    <!-- KATEGORI MENU -->
+    <section>
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-bold" id="category-pills">
+        <button onclick="filterCategory('all')" class="cat-pill px-4 py-2 rounded-xl bg-[#232723] text-white whitespace-nowrap transition-colors" data-cat="all">
           Semua Menu
         </button>
-        <button data-cat="potong" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white text-stone-600 border border-stone-200 hover:border-coral transition-all">
+        <button onclick="filterCategory('manis')" class="cat-pill px-4 py-2 rounded-xl bg-white border border-stone-200 text-stone-600 hover:border-stone-400 whitespace-nowrap transition-colors" data-cat="manis">
           Rujak Manis Potong
         </button>
-        <button data-cat="ulek" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white text-stone-600 border border-stone-200 hover:border-coral transition-all">
+        <button onclick="filterCategory('ulek')" class="cat-pill px-4 py-2 rounded-xl bg-white border border-stone-200 text-stone-600 hover:border-stone-400 whitespace-nowrap transition-colors" data-cat="ulek">
           Rujak Ulek / Bebeg
         </button>
-        <button data-cat="kuah" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white text-stone-600 border border-stone-200 hover:border-coral transition-all">
+        <button onclick="filterCategory('pindang')" class="cat-pill px-4 py-2 rounded-xl bg-white border border-stone-200 text-stone-600 hover:border-stone-400 whitespace-nowrap transition-colors" data-cat="pindang">
           Rujak Kuah Pindang
         </button>
-        <button data-cat="cingur" class="cat-btn px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white text-stone-600 border border-stone-200 hover:border-coral transition-all">
+        <button onclick="filterCategory('cingur')" class="cat-pill px-4 py-2 rounded-xl bg-white border border-stone-200 text-stone-600 hover:border-stone-400 whitespace-nowrap transition-colors" data-cat="cingur">
           Rujak Cingur
         </button>
       </div>
     </section>
 
-    <!-- Product Grid Catalog -->
+    <!-- GRID KATALOG MENU -->
     <section>
-      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Products injected via JavaScript -->
-      </div>
-      <div id="emptyCatalog" class="hidden py-16 text-center">
-        <div class="w-16 h-16 bg-stone-200 text-stone-400 rounded-full flex items-center justify-center mx-auto mb-3">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <h3 class="text-base font-bold text-stone-700">Menu Tidak Ditemukan</h3>
-        <p class="text-xs text-stone-500 mt-1">Coba kata kunci lain atau pilih kategori Semua Menu.</p>
+      <div id="menu-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="menu-empty-state" class="hidden text-center py-16 bg-white rounded-2xl border border-dashed border-stone-300">
+        <p class="text-sm font-bold text-stone-700">Menu tidak ditemukan</p>
+        <p class="text-xs text-stone-400 mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
       </div>
     </section>
-
   </main>
 
-  <!-- ==================== FLOATING CART BAR (MOBILE ONLY) ==================== -->
-  <div id="mobileCartBar" class="hidden fixed bottom-4 left-4 right-4 z-30 md:hidden animate-bounce-short">
-    <button 
-      id="btnOpenCartMobile"
-      class="w-full bg-coral hover:bg-coral-dark text-white p-4 rounded-2xl shadow-xl flex items-center justify-between font-bold"
-    >
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center text-sm">
-          <span id="mobileCartCount">0</span>
-        </div>
-        <span class="text-sm">Lihat Pesanan</span>
-      </div>
-      <span id="mobileCartTotal" class="text-sm tracking-wide">Rp 0</span>
-    </button>
-  </div>
+  <!-- MODAL ATUR RACIKAN BUMBU -->
+  <div id="customize-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-xs transition-opacity" onclick="closeCustomizeModal()"></div>
 
-  <!-- ==================== MODAL AKUN & RIWAYAT PESANAN ==================== -->
-  <div id="accountModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-md rounded-3xl p-5 sm:p-6 shadow-2xl border border-stone-200 max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+    <div class="absolute bottom-0 inset-x-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-slide-up">
       
-      <!-- Modal Header -->
-      <div class="flex items-center justify-between pb-3 border-b border-stone-100 flex-shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-xl bg-coral/10 text-coral flex items-center justify-center font-bold">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-extrabold text-charcoal text-base" id="accountModalTitle">Masuk ke RUJAKIN</h3>
-            <p class="text-[11px] text-stone-400" id="accountModalSubtitle">Simpan riwayat pesanan & pesan ulang instan</p>
-          </div>
+      <!-- Header Modal -->
+      <div class="px-5 pt-5 pb-3 border-b border-stone-100 flex items-start justify-between">
+        <div>
+          <h2 id="modal-menu-name" class="text-lg font-extrabold text-stone-900">Rujak Manis Surabaya</h2>
+          <p id="modal-menu-price" class="text-sm font-bold text-[#FF6B4A] mt-0.5">Rp 22.000</p>
         </div>
-        <button id="btnCloseAccountModal" class="p-1.5 text-stone-400 hover:text-charcoal rounded-full tap-target">
-          ✕
+        <button onclick="closeCustomizeModal()" class="p-1.5 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
         </button>
       </div>
 
-      <!-- VIEW 1: FORM MASUK DENGAN EMAIL LINK (Jika Belum Login) -->
-      <div id="authLoggedOutView" class="py-4 space-y-4 overflow-y-auto">
-        <p class="text-xs text-stone-600 leading-relaxed">
-          Gunakan alamat email Anda (<strong>Yahoo, Outlook, iCloud, Gmail, atau email kantor</strong>). Kami akan mengirimkan tautan masuk instan tanpa perlu mengingat kata sandi.
-        </p>
+      <!-- Konten Pilihan Bumbu -->
+      <div class="p-5 overflow-y-auto space-y-5 flex-1 text-xs">
 
-        <div class="space-y-3">
-          <div>
-            <label class="block text-xs font-semibold text-stone-700 mb-1">Alamat Email Aktif</label>
-            <input 
-              type="email" 
-              id="inputAuthEmail" 
-              placeholder="nama@email.com (contoh: siti@yahoo.com)" 
-              class="w-full px-3.5 py-2.5 border border-stone-200 rounded-xl text-sm focus:border-coral focus:outline-none transition-all"
-            >
-          </div>
-
-          <button 
-            id="btnSendEmailLink" 
-            class="w-full py-3 bg-coral hover:bg-coral-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all tap-target flex items-center justify-center gap-1.5"
-          >
-            <span>Kirim Tautan Masuk ke Email</span>
-          </button>
-        </div>
-
-        <div id="authEmailNotice" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 space-y-1">
-          <p class="font-bold">Tautan masuk berhasil dikirim!</p>
-          <p class="text-[11px] text-emerald-700 leading-relaxed">
-            Silakan periksa kotak masuk (atau folder spam) email Anda, lalu klik tautan masuk untuk langsung tersambung ke RUJAKIN.
-          </p>
-        </div>
-      </div>
-
-      <!-- VIEW 2: PROFIL & RIWAYAT PESANAN SAYA (Jika Sudah Login) -->
-      <div id="authLoggedInView" class="hidden py-4 space-y-4 overflow-y-auto flex-1">
-        <!-- Ringkasan Profil Akun -->
-        <div class="p-3.5 bg-stone-50 rounded-2xl border border-stone-200 flex items-center justify-between">
-          <div>
-            <span class="text-[10px] font-bold text-stone-400 uppercase tracking-wider block">Akun Terhubung</span>
-            <h4 class="text-xs font-bold text-charcoal" id="profileEmailDisplay">user@email.com</h4>
-          </div>
-          <button 
-            id="btnLogoutUser" 
-            class="px-2.5 py-1 rounded-lg border border-stone-300 text-stone-600 hover:text-red-600 hover:border-red-300 font-bold text-xs transition-colors"
-          >
-            Keluar
-          </button>
-        </div>
-
-        <!-- Daftar Riwayat Pesanan -->
+        <!-- 1. TINGKAT PEDAS -->
         <div>
-          <div class="flex items-center justify-between mb-2">
-            <h4 class="text-xs font-bold text-stone-600 uppercase tracking-wider">Riwayat Pesanan Anda</h4>
-            <span id="historyOrdersCount" class="text-[10px] font-bold text-coral bg-coral/10 px-2 py-0.5 rounded-full">0 Pesanan</span>
+          <div class="flex items-center justify-between mb-2.5">
+            <label class="text-sm font-bold text-stone-800">Tingkat Pedas</label>
+            <span id="label-selected-spice" class="text-xs font-semibold text-[#FF6B4A]">Level 2</span>
           </div>
-
-          <div id="historyOrdersList" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
-            <!-- Rendered via JS -->
-          </div>
-
-          <div id="emptyHistoryNotice" class="hidden py-8 text-center bg-stone-50 rounded-2xl border border-dashed border-stone-200">
-            <p class="text-xs font-bold text-stone-500">Belum Ada Riwayat Pesanan</p>
-            <p class="text-[11px] text-stone-400 mt-0.5">Pesanan Anda berikutnya akan otomatis tersimpan di sini.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ==================== SPICE CUSTOMIZATION MODAL ==================== -->
-  <div id="spiceModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white w-full max-w-lg rounded-t-3xl sm:rounded-2xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-200">
-      
-      <!-- Modal Header -->
-      <div class="px-6 py-4 border-b border-stone-100 flex items-center justify-between">
-        <div>
-          <h3 id="modalProductName" class="text-lg font-bold text-charcoal">Nama Rujak</h3>
-          <p id="modalProductPrice" class="text-sm font-semibold text-coral">Rp 0</p>
-        </div>
-        <button id="btnCloseSpiceModal" class="p-2 text-stone-400 hover:text-charcoal rounded-full tap-target">
-          ✕
-        </button>
-      </div>
-
-      <!-- Modal Body (Form Options) -->
-      <div class="p-6 overflow-y-auto space-y-5 text-sm">
-        
-        <!-- 1. Level Pedas -->
-        <div>
-          <label class="block font-bold text-stone-800 mb-2">Tingkat Pedas (Jumlah Cabai)</label>
-          <div class="grid grid-cols-6 gap-2" id="spicyLevelOptions">
-            <label class="flex flex-col items-center justify-center p-2 rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="spice_level" value="0 Cabai (Tidak Pedas)" class="sr-only">
-              <span class="text-xs font-bold">0</span>
-              <span class="text-[10px] text-stone-500">Manis</span>
-            </label>
-            <label class="flex flex-col items-center justify-center p-2 rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="spice_level" value="1 Cabai (Sedang Tipis)" class="sr-only">
-              <span class="text-xs font-bold">1</span>
-              <span class="text-[10px] text-stone-500">1 Cabai</span>
-            </label>
-            <label class="flex flex-col items-center justify-center p-2 rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="spice_level" value="2 Cabai (Sedang Pas)" checked class="sr-only">
-              <span class="text-xs font-bold">2</span>
-              <span class="text-[10px] text-stone-500">2 Cabai</span>
-            </label>
-            <label class="flex flex-col items-center justify-center p-2 rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="spice_level" value="3 Cabai (Pedas Mantap)" class="sr-only">
-              <span class="text-xs font-bold">3</span>
-              <span class="text-[10px] text-stone-500">3 Cabai</span>
-            </label>
-            <label class="flex flex-col items-center justify-center p-2 rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="spice_level" value="4 Cabai (Pedas Nampol)" class="sr-only">
-              <span class="text-xs font-bold">4</span>
-              <span class="text-[10px] text-stone-500">4 Cabai</span>
-            </label>
-            <label class="flex flex-col items-center justify-center p-2 rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="spice_level" value="5 Cabai (Ekstra Pedas Gila)" class="sr-only">
-              <span class="text-xs font-bold text-coral">5</span>
-              <span class="text-[10px] text-coral font-bold">Ekstra</span>
-            </label>
+          <div class="grid grid-cols-6 gap-2" id="spice-button-group">
+            <button type="button" onclick="selectSpice(0)" class="spice-btn py-3 rounded-xl border border-stone-200 text-center font-bold text-sm text-stone-700 hover:border-stone-300 transition-all" data-spice="0">0</button>
+            <button type="button" onclick="selectSpice(1)" class="spice-btn py-3 rounded-xl border border-stone-200 text-center font-bold text-sm text-stone-700 hover:border-stone-300 transition-all" data-spice="1">1</button>
+            <button type="button" onclick="selectSpice(2)" class="spice-btn py-3 rounded-xl border-[#FF6B4A] bg-[#FF6B4A]/10 text-[#FF6B4A] text-center font-bold text-sm transition-all" data-spice="2">2</button>
+            <button type="button" onclick="selectSpice(3)" class="spice-btn py-3 rounded-xl border border-stone-200 text-center font-bold text-sm text-stone-700 hover:border-stone-300 transition-all" data-spice="3">3</button>
+            <button type="button" onclick="selectSpice(4)" class="spice-btn py-3 rounded-xl border border-stone-200 text-center font-bold text-sm text-stone-700 hover:border-stone-300 transition-all" data-spice="4">4</button>
+            <button type="button" onclick="selectSpice(5)" class="spice-btn py-3 rounded-xl border border-stone-200 text-center font-bold text-sm text-stone-700 hover:border-stone-300 transition-all text-rose-600" data-spice="5">5</button>
           </div>
         </div>
 
-        <!-- 2. Tekstur Kacang -->
+        <!-- 2. TEKSTUR KACANG BUMBU -->
         <div>
-          <label class="block font-bold text-stone-800 mb-2">Tekstur Kacang Bumbu</label>
-          <div class="grid grid-cols-3 gap-2">
-            <label class="p-3 text-center rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="nut_texture" value="Kacang Kasar (Crunchy)" checked class="sr-only">
-              <span class="text-xs font-bold block">Kacang Kasar</span>
-              <span class="text-[10px] text-stone-500">Renyah gurih</span>
-            </label>
-            <label class="p-3 text-center rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="nut_texture" value="Kacang Halus (Creamy)" class="sr-only">
-              <span class="text-xs font-bold block">Kacang Halus</span>
-              <span class="text-[10px] text-stone-500">Lembut merata</span>
-            </label>
-            <label class="p-3 text-center rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="nut_texture" value="Tanpa Kacang" class="sr-only">
-              <span class="text-xs font-bold block">Tanpa Kacang</span>
-              <span class="text-[10px] text-stone-500">Alergi kacang</span>
-            </label>
+          <label class="block text-sm font-bold text-stone-800 mb-2.5">Tekstur Kacang Bumbu</label>
+          <div class="grid grid-cols-3 gap-2" id="texture-button-group">
+            <button type="button" onclick="selectTexture('Kacang Kasar')" class="texture-btn py-3 px-2 rounded-xl border-[#FF6B4A] bg-[#FF6B4A]/10 text-[#FF6B4A] font-semibold text-xs text-center transition-all" data-texture="Kacang Kasar">
+              Kacang Kasar
+            </button>
+            <button type="button" onclick="selectTexture('Kacang Halus')" class="texture-btn py-3 px-2 rounded-xl border border-stone-200 bg-white text-stone-700 font-semibold text-xs text-center hover:border-stone-300 transition-all" data-texture="Kacang Halus">
+              Kacang Halus
+            </button>
+            <button type="button" onclick="selectTexture('Tanpa Kacang')" class="texture-btn py-3 px-2 rounded-xl border border-stone-200 bg-white text-stone-700 font-semibold text-xs text-center hover:border-stone-300 transition-all" data-texture="Tanpa Kacang">
+              Tanpa Kacang
+            </button>
           </div>
         </div>
 
-        <!-- 3. Posisi Bumbu -->
+        <!-- 3. PENYAJIAN BUMBU -->
         <div>
-          <label class="block font-bold text-stone-800 mb-2">Penyajian Bumbu</label>
-          <div class="grid grid-cols-2 gap-2">
-            <label class="p-3 text-center rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="sauce_position" value="Bumbu Dipisah" checked class="sr-only">
-              <span class="text-xs font-bold block">Bumbu Dipisah</span>
-              <span class="text-[10px] text-stone-500">Buah tetap garing</span>
-            </label>
-            <label class="p-3 text-center rounded-xl border border-stone-200 cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/10">
-              <input type="radio" name="sauce_position" value="Dicampur Langsung" class="sr-only">
-              <span class="text-xs font-bold block">Campur Langsung</span>
-              <span class="text-[10px] text-stone-500">Meresap sempurna</span>
-            </label>
+          <label class="block text-sm font-bold text-stone-800 mb-2.5">Penyajian Bumbu</label>
+          <div class="grid grid-cols-2 gap-2" id="serving-button-group">
+            <button type="button" onclick="selectServing('Bumbu Dipisah')" class="serving-btn py-3 px-3 rounded-xl border-[#FF6B4A] bg-[#FF6B4A]/10 text-[#FF6B4A] font-semibold text-xs text-center transition-all" data-serving="Bumbu Dipisah">
+              Bumbu Dipisah
+            </button>
+            <button type="button" onclick="selectServing('Campur Langsung')" class="serving-btn py-3 px-3 rounded-xl border border-stone-200 bg-white text-stone-700 font-semibold text-xs text-center hover:border-stone-300 transition-all" data-serving="Campur Langsung">
+              Campur Langsung
+            </button>
           </div>
         </div>
 
-        <!-- 4. Catatan Khusus -->
+        <!-- 4. CATATAN TAMBAHAN -->
         <div>
-          <label for="customNotes" class="block font-bold text-stone-800 mb-1">Catatan Tambahan (Opsional)</label>
-          <input 
-            type="text" 
-            id="customNotes" 
+          <label class="block text-sm font-bold text-stone-800 mb-2">Catatan Tambahan (Opsional)</label>
+          <textarea 
+            id="modal-notes" 
+            rows="2" 
             placeholder="Contoh: Jangan pakai kedondong, banyakin mangga muda..." 
-            class="w-full px-3 py-2 border border-stone-200 rounded-xl text-sm focus:border-coral focus:outline-none"
-          >
+            class="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-xs focus:outline-none focus:border-[#FF6B4A] focus:bg-white transition-colors"
+          ></textarea>
         </div>
-
       </div>
 
-      <!-- Modal Footer -->
-      <div class="p-4 border-t border-stone-100 bg-stone-50">
-        <button 
-          id="btnAddToCartConfirm"
-          class="w-full py-3.5 bg-coral hover:bg-coral-dark text-white font-bold rounded-xl shadow-md transition-all tap-target flex items-center justify-center gap-2"
-        >
-          <span>Tambahkan ke Keranjang</span>
+      <!-- Footer Tombol Aksi Modal -->
+      <div class="p-4 border-t border-stone-100 bg-stone-50/50">
+        <button onclick="confirmAddToCart()" class="w-full py-3.5 bg-[#FF6B4A] hover:bg-[#e05637] text-white font-bold text-sm rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.99]">
+          Tambahkan ke Keranjang
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- ==================== CART DRAWER ==================== -->
-  <div id="cartDrawer" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex justify-end">
-    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
+  <!-- SLIDING DRAWER KERANJANG BELANJA -->
+  <div id="cart-drawer-overlay" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-stone-900/50 backdrop-blur-xs" onclick="toggleCartDrawer(false)"></div>
+    <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col">
       
       <!-- Drawer Header -->
       <div class="p-4 border-b border-stone-200 flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          <h2 class="text-base font-bold text-stone-900">Keranjang Belanja</h2>
+          <span id="drawer-item-count-badge" class="px-2 py-0.5 rounded-full text-xs font-bold bg-[#FF6B4A]/10 text-[#FF6B4A]">0 item</span>
+        </div>
+        <button onclick="toggleCartDrawer(false)" class="p-1 rounded-lg text-stone-400 hover:text-stone-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
-          <h2 class="font-bold text-base text-charcoal">Keranjang Pesanan</h2>
-        </div>
-        <button id="btnCloseCart" class="p-2 text-stone-400 hover:text-charcoal rounded-full tap-target">
-          ✕
         </button>
       </div>
 
-      <!-- Drawer Content -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-4" id="cartContentArea">
-        
-        <!-- Cart Items List -->
-        <div id="cartItemsList" class="space-y-3">
-          <!-- Populated by JS -->
-        </div>
+      <!-- Items List -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3" id="cart-items-list"></div>
 
-        <!-- Empty State -->
-        <div id="cartEmptyState" class="py-12 text-center">
-          <div class="w-16 h-16 bg-stone-100 text-stone-400 rounded-full flex items-center justify-center mx-auto mb-3">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <p class="font-bold text-stone-700">Keranjang masih kosong</p>
-          <p class="text-xs text-stone-500 mt-1">Yuk pilih rujak favoritmu di katalog!</p>
-        </div>
-
-        <!-- Order Form Details -->
-        <div id="checkoutFormSection" class="hidden pt-4 border-t border-stone-200 space-y-4">
-          
-          <!-- Pilihan Layanan -->
-          <div>
-            <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-2">Metode Pengambilan</label>
-            <div class="grid grid-cols-2 gap-2">
-              <label class="flex items-center gap-2 p-3 border rounded-xl cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/5 text-xs font-bold">
-                <input type="radio" name="service_type" value="delivery" checked class="accent-coral">
-                <span>Diantar Kurir (+Rp 10.000)</span>
-              </label>
-              <label class="flex items-center gap-2 p-3 border rounded-xl cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/5 text-xs font-bold">
-                <input type="radio" name="service_type" value="pickup" class="accent-coral">
-                <span>Ambil di Kedai (Gratis)</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Customer Identity Form -->
-          <div class="space-y-2.5">
-            <div>
-              <label class="block text-xs font-semibold text-stone-600 mb-1">Nama Pemesan *</label>
-              <input type="text" id="custName" placeholder="Contoh: Budi Santoso" class="w-full px-3 py-2 text-sm border border-stone-200 rounded-xl focus:border-coral focus:outline-none">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-stone-600 mb-1">Nomor WhatsApp Aktif *</label>
-              <input type="tel" id="custPhone" placeholder="08xxxxxxxxxx" class="w-full px-3 py-2 text-sm border border-stone-200 rounded-xl focus:border-coral focus:outline-none">
-            </div>
-            <div id="addressFieldContainer">
-              <label class="block text-xs font-semibold text-stone-600 mb-1">Alamat Pengantaran Lengkap *</label>
-              <textarea id="custAddress" rows="2" placeholder="Nama jalan, nomor rumah, patokan..." class="w-full px-3 py-2 text-sm border border-stone-200 rounded-xl focus:border-coral focus:outline-none"></textarea>
-            </div>
-          </div>
-
-          <!-- Metode Pembayaran -->
-          <div>
-            <label class="block text-xs font-bold text-stone-600 uppercase tracking-wider mb-2">Metode Pembayaran</label>
-            <div class="grid grid-cols-2 gap-2 mb-3">
-              <label class="flex items-center gap-2 p-3 border rounded-xl cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/5 text-xs font-bold">
-                <input type="radio" name="payment_method" value="qris" checked class="accent-coral">
-                <span>QRIS / Transfer Bank</span>
-              </label>
-              <label class="flex items-center gap-2 p-3 border rounded-xl cursor-pointer hover:border-coral has-[:checked]:border-coral has-[:checked]:bg-coral/5 text-xs font-bold">
-                <input type="radio" name="payment_method" value="cod" class="accent-coral">
-                <span>Bayar Tunai di Tempat (COD)</span>
-              </label>
-            </div>
-
-            <!-- Dynamic QRIS Info Box -->
-            <div id="qrisDetailBox" class="p-3 bg-stone-50 border border-stone-200 rounded-xl text-xs space-y-2">
-              <div class="flex items-center justify-between font-bold text-stone-700">
-                <span>Scan QRIS Resmi Kedai</span>
-                <span class="text-[10px] text-stone-500">Semua E-Wallet / Bank</span>
-              </div>
-              <div class="bg-white p-2 rounded-lg border border-stone-200 text-center">
-                <img 
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=00020101021126580014ID.CO.QRIS.WWW01189360099900000123455204581253033605802ID5908RUJAKIN6007JAKARTA63041234" 
-                  alt="QRIS RUJAKIN"
-                  class="w-32 h-32 mx-auto object-contain rounded-md mb-1"
-                >
-                <p class="text-[10px] text-stone-500">Scan melalui BCA, GoPay, OVO, ShopeePay, atau DANA</p>
-              </div>
-              <div class="pt-1 flex items-center justify-between text-stone-600">
-                <span>Rekening BCA: <strong>8831-2900-11</strong></span>
-                <button type="button" onclick="navigator.clipboard.writeText('8831290011'); alert('Nomor rekening BCA disalin!');" class="text-coral font-bold hover:underline">Salin</button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- Drawer Footer -->
-      <div id="cartFooter" class="hidden p-4 border-t border-stone-200 bg-stone-50 space-y-3">
-        <div class="space-y-1.5 text-xs text-stone-600">
-          <div class="flex justify-between">
-            <span>Subtotal Produk</span>
-            <span id="summarySubtotal" class="font-semibold text-charcoal">Rp 0</span>
-          </div>
-          <div class="flex justify-between">
-            <span>Biaya Pengantaran</span>
-            <span id="summaryDelivery" class="font-semibold text-charcoal">Rp 10.000</span>
-          </div>
-          <div class="flex justify-between text-sm font-bold text-charcoal pt-1 border-t border-stone-200">
-            <span>Total Tagihan</span>
-            <span id="summaryGrandTotal" class="text-coral text-base">Rp 0</span>
+      <!-- Checkout Form & Totals -->
+      <div class="p-4 border-t border-stone-200 bg-stone-50/80 space-y-3.5 text-xs">
+        <!-- Opsi Layanan -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1.5">Metode Penerimaan</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="setDeliveryMethod('delivery')" id="btn-delivery" class="py-2 px-3 rounded-xl border-2 border-[#FF6B4A] bg-[#FF6B4A]/10 font-bold text-[#FF6B4A] text-center">
+              Diantar Kurir (+10rb)
+            </button>
+            <button type="button" onclick="setDeliveryMethod('pickup')" id="btn-pickup" class="py-2 px-3 rounded-xl border border-stone-200 bg-white font-semibold text-stone-600 text-center">
+              Ambil di Kedai (Rp 0)
+            </button>
           </div>
         </div>
 
-        <button 
-          id="btnSubmitOrder"
-          class="w-full py-3.5 bg-coral hover:bg-coral-dark text-white font-bold rounded-xl shadow-md transition-all tap-target flex items-center justify-center gap-2"
-        >
-          <span>Pesan Sekarang</span>
+        <!-- Data Pembeli -->
+        <div class="space-y-2 pt-1">
+          <input type="text" id="cust-name" placeholder="Nama Lengkap Pemesan *" class="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs focus:border-[#FF6B4A] outline-none" />
+          <input type="tel" id="cust-phone" placeholder="Nomor WhatsApp (Contoh: 08123456789) *" class="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs focus:border-[#FF6B4A] outline-none" />
+          <textarea id="cust-address" rows="2" placeholder="Alamat Pengiriman Lengkap *" class="w-full bg-white border border-stone-200 rounded-xl px-3 py-2 text-xs focus:border-[#FF6B4A] outline-none"></textarea>
+        </div>
+
+        <!-- Metode Pembayaran -->
+        <div>
+          <label class="block font-bold text-stone-700 mb-1.5">Metode Pembayaran</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="setPaymentMethod('qris')" id="btn-pay-qris" class="py-2 px-3 rounded-xl border-2 border-[#FF6B4A] bg-[#FF6B4A]/10 font-bold text-[#FF6B4A] text-center">
+              QRIS / Transfer
+            </button>
+            <button type="button" onclick="setPaymentMethod('cod')" id="btn-pay-cod" class="py-2 px-3 rounded-xl border border-stone-200 bg-white font-semibold text-stone-600 text-center">
+              Tunai (COD)
+            </button>
+          </div>
+        </div>
+
+        <!-- Rincian Biaya -->
+        <div class="border-t border-stone-200 pt-2 space-y-1 text-stone-600">
+          <div class="flex justify-between"><span>Subtotal</span><span id="summary-subtotal" class="font-medium">Rp 0</span></div>
+          <div class="flex justify-between"><span>Biaya Pengantaran</span><span id="summary-shipping" class="font-medium">Rp 10.000</span></div>
+          <div class="flex justify-between text-sm font-black text-stone-900 pt-1 border-t border-stone-200">
+            <span>Total Pembayaran</span>
+            <span id="summary-total" class="text-[#FF6B4A]">Rp 0</span>
+          </div>
+        </div>
+
+        <button onclick="submitOrder()" id="btn-submit-order" class="w-full py-3.5 bg-[#5B8C5A] hover:bg-emerald-700 text-white font-bold text-sm rounded-xl shadow-md transition-colors active:scale-[0.99]">
+          Konfirmasi & Pesan Sekarang
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- ==================== SUCCESS MODAL ==================== -->
-  <div id="orderSuccessModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-2xl p-6 text-center shadow-2xl animate-in zoom-in-95 duration-150">
-      <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+  <!-- FLOATING CART BAR (MOBILE) -->
+  <div id="floating-cart-bar" class="fixed bottom-3 inset-x-4 z-30 md:hidden hidden">
+    <button onclick="toggleCartDrawer(true)" class="w-full bg-[#232723] text-white p-3.5 rounded-2xl shadow-xl flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="w-7 h-7 rounded-full bg-[#FF6B4A] text-white text-xs font-bold flex items-center justify-center" id="floating-cart-count">0</span>
+        <span class="text-xs font-medium">Lihat Keranjang</span>
+      </div>
+      <span class="text-xs font-bold text-[#FF6B4A]" id="floating-cart-total">Rp 0 →</span>
+    </button>
+  </div>
+
+  <!-- MODAL SUKSES PESANAN -->
+  <div id="success-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-xs"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-2xl p-6 shadow-2xl text-center">
+      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
         </svg>
       </div>
-      <h3 class="text-lg font-bold text-charcoal">Pesanan Berhasil Masuk!</h3>
-      <p class="text-xs text-stone-500 mt-1 mb-4 leading-relaxed">
-        Pesananmu sudah tercatat di sistem antrean dapur. Klik tombol di bawah untuk konfirmasi otomatis ke WhatsApp kedai.
-      </p>
+      <h3 class="text-lg font-black text-stone-900">Pesanan Berhasil Dibuat!</h3>
+      <p class="text-xs text-stone-500 mt-1">Nomor Nota: <span id="success-order-id" class="font-mono font-bold text-[#FF6B4A]">#RJK-0000</span></p>
 
-      <div class="p-3 bg-stone-50 rounded-xl mb-5 text-left text-xs space-y-1">
-        <div class="flex justify-between font-medium text-stone-500">
-          <span>Nomor Pesanan:</span>
-          <span id="successOrderId" class="font-bold text-charcoal">RJK-0000</span>
-        </div>
-        <div class="flex justify-between font-medium text-stone-500">
-          <span>Total Pembayaran:</span>
-          <span id="successTotalAmount" class="font-bold text-coral">Rp 0</span>
-        </div>
+      <div class="mt-4 bg-stone-50 p-3 rounded-xl border border-stone-200 text-left text-xs space-y-1 text-stone-600">
+        <p>Pesanan telah dikirim ke dapur. Konfirmasi instan via WhatsApp juga telah disiapkan agar pesanan segera diproses.</p>
       </div>
 
-      <div class="space-y-2">
-        <a 
-          id="btnSendWhatsApp" 
-          href="#" 
-          target="_blank" 
-          class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm"
-        >
-          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
-          </svg>
-          <span>Kirim Rincian ke WhatsApp</span>
+      <div class="mt-5 space-y-2">
+        <a id="success-wa-link" href="#" target="_blank" class="block w-full py-3 bg-[#25D366] hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow transition-colors">
+          Kirim Rincian ke WhatsApp Admin
         </a>
-
-        <button 
-          id="btnCloseSuccessModal"
-          class="w-full py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold rounded-xl text-xs transition-all"
-        >
-          Tutup & Belanja Lagi
+        <button onclick="closeSuccessModal()" class="block w-full py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs rounded-xl transition-colors">
+          Kembali ke Katalog
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- ==================== MODAL LACAK PESANAN MANUAL ==================== -->
-  <div id="manualTrackModal" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-2xl p-6 shadow-2xl border border-stone-200">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="font-extrabold text-charcoal text-base">Lacak Pesanan Rujak</h3>
-        <button id="btnCloseManualTrackModal" class="p-1.5 text-stone-400 hover:text-charcoal rounded-full tap-target">
-          ✕
-        </button>
+  <!-- MODAL AKUN & RIWAYAT -->
+  <div id="account-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-xs" onclick="closeAccountModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl text-xs">
+      <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-4">
+        <h3 class="text-base font-bold text-stone-900">Akun Pelanggan</h3>
+        <button onclick="closeAccountModal()" class="text-stone-400 hover:text-stone-700">✕</button>
       </div>
 
-      <p class="text-xs text-stone-500 mb-4 leading-relaxed">
-        Masukkan nomor nota yang tertera pada nota belanja atau bukti konfirmasi WhatsApp (contoh: <strong class="text-charcoal">RJK-7101</strong>).
-      </p>
+      <!-- Belum Login -->
+      <div id="account-guest-view">
+        <p class="text-stone-600 mb-3">Masukkan email untuk menerima tautan masuk instan tanpa kata sandi (semua domain email didukung).</p>
+        <div class="space-y-3">
+          <input type="email" id="login-email-input" placeholder="contoh: budi@gmail.com / budi@yahoo.com" class="w-full border border-stone-200 rounded-xl p-3 text-xs focus:border-[#FF6B4A] outline-none" />
+          <button onclick="sendLoginEmail()" id="btn-send-email-link" class="w-full py-3 bg-[#FF6B4A] hover:bg-[#e05637] text-white font-bold rounded-xl transition-colors">
+            Kirim Tautan Masuk Instan
+          </button>
+        </div>
+        <p id="auth-status-msg" class="text-[11px] text-stone-500 mt-2 text-center"></p>
+      </div>
 
-      <div class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-stone-600 mb-1">Nomor Nota Pesanan</label>
-          <input 
-            type="text" 
-            id="inputManualOrderId" 
-            placeholder="Contoh: RJK-7101" 
-            class="w-full px-3 py-2.5 text-sm uppercase tracking-wider border border-stone-200 rounded-xl focus:border-coral focus:outline-none font-bold"
-          >
+      <!-- Sudah Login -->
+      <div id="account-logged-view" class="hidden space-y-4">
+        <div class="bg-stone-50 p-3 rounded-xl flex items-center justify-between">
+          <div>
+            <p class="text-[10px] text-stone-400 font-semibold">Tersambung sebagai:</p>
+            <p id="user-email-display" class="font-bold text-stone-800 text-xs">-</p>
+          </div>
+          <button onclick="handleSignOut()" class="px-2.5 py-1 text-xs border border-rose-300 text-rose-600 rounded-lg hover:bg-rose-50">Keluar</button>
         </div>
 
-        <button 
-          id="btnExecuteManualTrack"
-          class="w-full py-3 bg-coral hover:bg-coral-dark text-white font-bold text-xs rounded-xl shadow-xs transition-all tap-target flex items-center justify-center gap-1.5"
-        >
-          <span>Mulai Lacak Pesanan</span>
-        </button>
+        <div>
+          <h4 class="font-bold text-stone-800 mb-2">Riwayat Pesanan Terakhir</h4>
+          <div id="user-order-history-list" class="space-y-2 max-h-56 overflow-y-auto"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== FOOTER ==================== -->
-  <footer class="bg-stone-900 text-stone-400 text-xs py-8 mt-12 border-t border-stone-800">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="text-center sm:text-left">
-        <p class="text-stone-200 font-bold text-sm">RUJAKIN Nusantara</p>
-        <p class="mt-0.5">Buka setiap hari: 10.00 - 21.00 WITA</p>
+  <!-- MODAL LACAK PESANAN MANUAL -->
+  <div id="tracker-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-xs" onclick="closeTrackerModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-white rounded-2xl p-5 shadow-2xl text-xs">
+      <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
+        <h3 class="text-sm font-bold text-stone-900">Lacak Pesanan Rujak</h3>
+        <button onclick="closeTrackerModal()" class="text-stone-400 hover:text-stone-700">✕</button>
       </div>
-      <p class="text-stone-500 text-[11px] text-center sm:text-right">Pesan Rujak Nusantara Segar & Praktis</p>
+      <p class="text-stone-500 mb-3">Ketikkan nomor nota yang tertera pada saat pemesanan.</p>
+      <div class="flex gap-2">
+        <input type="text" id="manual-track-id" placeholder="Contoh: RJK-2940" class="flex-1 border border-stone-200 rounded-xl px-3 py-2 text-xs focus:border-[#FF6B4A] outline-none uppercase font-mono" />
+        <button onclick="searchManualOrder()" class="px-4 py-2 bg-[#FF6B4A] text-white font-bold rounded-xl">Lacak</button>
+      </div>
+      <p id="manual-track-result" class="text-[11px] text-stone-500 mt-3"></p>
     </div>
-  </footer>
+  </div>
 
-  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <!-- TOAST NOTIFIKASI KUSTOM -->
+  <div id="toast-notif" class="fixed top-4 right-4 z-50 bg-[#232723] text-white px-4 py-2.5 rounded-xl shadow-lg text-xs font-semibold transform -translate-y-10 opacity-0 pointer-events-none transition-all duration-300">
+    Pesan notifikasi
+  </div>
+
+  <!-- FIREBASE & LOGIKA KATALOG PEMBELI -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { 
       initializeFirestore, 
+      collection, 
+      onSnapshot, 
       doc, 
       setDoc, 
-      collection, 
+      getDoc, 
       query, 
       where, 
-      getDocs, 
-      onSnapshot 
+      orderBy 
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
     import { 
       getAuth, 
+      signInAnonymously, 
       sendSignInLinkToEmail, 
       isSignInWithEmailLink, 
       signInWithEmailLink, 
-      onAuthStateChanged, 
       signOut, 
-      signInAnonymously 
+      onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // 1. Konfigurasi Firebase Proyek RUJAKIN
     const firebaseConfig = {
       apiKey: "AIzaSyB1UVr0NWTX-mzFMy1wTVyi2Jk674t9mWA",
       authDomain: "rujakin-nusantara.firebaseapp.com",
@@ -774,200 +471,662 @@
       appId: "1:1031310094509:web:f18ec3d7bea32ad39a5624"
     };
 
-    // Nomor WhatsApp Penjual (Ganti dengan nomor WhatsApp aktif kedai)
     const STORE_WHATSAPP = "6281234567890";
 
-    // Inisialisasi Firebase
-    let db = null;
-    let auth = null;
-    let currentUser = null;
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, { experimentalForceLongPolling: true });
+    const auth = getAuth(app);
 
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = initializeFirestore(app, { experimentalForceLongPolling: true });
-      auth = getAuth(app);
-    } catch (err) {
-      console.warn("Koneksi Firebase lokal:", err.message);
-    }
-
-    // 2. Data Master Produk
-    const MENU_DATA = [
+    // Master Menu RUJAKIN
+    const MENU_ITEMS = [
       {
-        id: "rjk-surabaya",
-        name: "Rujak Manis Surabaya",
-        category: "potong",
+        id: "m1",
+        name: "Rujak Manis Jawa",
         origin: "Jawa Timur",
+        category: "manis",
         price: 22000,
-        image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80",
-        description: "Potongan buah segar nan renyah (mangga kueni, kedondong, bengkuang, nanas, jambu) disiram bumbu petis gula merah legit tabur kacang.",
-        available: true
-      },
-      {
-        id: "rjk-bebeg",
-        name: "Rujak Ulek Bebeg Cirebon",
-        category: "ulek",
-        origin: "Jawa Barat",
-        price: 18000,
         image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80",
-        description: "Buah muda (pisang batu, ubi merah, delima batu, bengkuang) ditumbuk kasar dalam lumpang kayu bersama terasi dan asam jawa.",
-        available: true
+        description: "Potongan buah nanas, bengkoang, pepaya, mangga muda dengan gula aren kental dan taburan kacang sangrai."
       },
       {
-        id: "rjk-pindang",
-        name: "Rujak Kuah Pindang Bali",
-        category: "kuah",
+        id: "m2",
+        name: "Rujak Bebeg Ulek",
+        origin: "Sunda/Betawi",
+        category: "ulek",
+        price: 18000,
+        image: "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?auto=format&fit=crop&w=600&q=80",
+        description: "Buah-buahan segar ditumbuk kasar bersama terasi bakar, asam jawa, pisang batu, dan garam laut."
+      },
+      {
+        id: "m3",
+        name: "Rujak Kuah Pindang",
         origin: "Bali",
+        category: "pindang",
         price: 20000,
         image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
-        description: "Irisan tipis mangga muda dan pepaya mengkal bermandikan kaldu ikan tuna khas pulau dewata dengan sensasi gurih pedas nendang.",
-        available: true
+        description: "Irisan mangga muda dan kedondong segar berpadu kaldu ikan pindang gurih pedas khas pesisir Bali."
       },
       {
-        id: "rjk-cingur",
-        name: "Rujak Cingur Istimewa",
+        id: "m4",
+        name: "Rujak Cingur Otentik",
+        origin: "Surabaya",
         category: "cingur",
-        origin: "Jawa Timur",
         price: 28000,
+        image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80",
+        description: "Cingur sapi kenyal gurih, kangkung, taoge, timun, tempe, tahu dengan ulekan petis udang hitam pekat."
+      },
+      {
+        id: "m5",
+        name: "Rujak Natsepa",
+        origin: "Ambon",
+        category: "manis",
+        price: 25000,
         image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
-        description: "Cingur sapi empuk kenyal berpadu dengan kangkung, taoge, lontong, tahu tempe, dan bumbu petis udang hitam pekat mantap.",
-        available: true
+        description: "Bumbu gula merah kental khas pantai Natsepa bertabur cincangan kacang tanah panggang yang melimpah."
       },
       {
-        id: "rjk-juhi",
-        name: "Rujak Juhi Gurih Betawi",
+        id: "m6",
+        name: "Rujak Serut Segar",
+        origin: "Cirebon",
         category: "ulek",
-        origin: "Jakarta",
-        price: 26000,
+        price: 19000,
         image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80",
-        description: "Suwiran cumi juhi kering harum panggang, mie kuning, selada segar, mentimun, kentang rebus, dan kerupuk mie siram bumbu kacang kental.",
-        available: true
-      },
-      {
-        id: "rjk-natsepa",
-        name: "Rujak Buah Natsepa Ambon",
-        category: "potong",
-        origin: "Maluku",
-        price: 24000,
-        image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=600&q=80",
-        description: "Bumbu kacang goreng tumbuk kasar beraroma buah pala segar, gula aren Saparua, dan garam laut khas pesisir pantai Maluku.",
-        available: true
+        description: "Serutan aneka buah dingin yang menyerap bumbu pedas manis asam segar hingga ke serat terdalam."
       }
     ];
 
     // State Aplikasi
     let currentCategory = "all";
     let searchQuery = "";
+    let inventoryState = {};
     let cart = [];
-    let selectedProductForCustom = null;
+    let deliveryMethod = "delivery";
+    let paymentMethod = "qris";
+    let currentUser = null;
+    let activeOrderId = localStorage.getItem("rujakin_active_order") || null;
+    let orderUnsubscribe = null;
 
-    // Sinkronisasi Stok dari Firestore
-    if (db) {
-      try {
-        onSnapshot(doc(db, "settings", "inventory"), (docSnap) => {
-          if (docSnap.exists()) {
-            const stockData = docSnap.data();
-            MENU_DATA.forEach(item => {
-              if (stockData[item.id] !== undefined) {
-                item.available = stockData[item.id];
-              }
-            });
-            renderProducts();
-          }
-        }, (err) => console.log("Inventory listener error:", err.message));
-      } catch (e) {}
+    // State Modal Racikan Bumbu
+    let activeCustomizingMenu = null;
+    let selectedSpice = 2;
+    let selectedTexture = "Kacang Kasar";
+    let selectedServing = "Bumbu Dipisah";
+
+    // Inisialisasi Auth & Sinkronisasi
+    signInAnonymously(auth).catch(err => console.log("Anon auth:", err));
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      updateAuthUI(user);
+      if (user && !user.isAnonymous && user.email) {
+        loadUserOrderHistory(user.email);
+      }
+    });
+
+    // Cek jika halaman dibuka dari Email Link Firebase
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      let email = window.localStorage.getItem("emailForSignIn");
+      if (!email) {
+        email = window.prompt("Mohon masukkan email Anda untuk konfirmasi masuk:");
+      }
+      if (email) {
+        signInWithEmailLink(auth, email, window.location.href)
+          .then((result) => {
+            window.localStorage.removeItem("emailForSignIn");
+            showToast("Berhasil masuk ke akun RUJAKIN!");
+            updateAuthUI(result.user);
+          })
+          .catch((error) => {
+            console.error("Error sign in email link:", error);
+            showToast("Tautan masuk sudah kedaluwarsa atau tidak valid.");
+          });
+      }
     }
 
-    // Format Rupiah
-    function formatRupiah(amount) {
-      return "Rp " + Number(amount || 0).toLocaleString("id-ID");
+    // Listener Stok Real-time dari Dapur (Dengan Error Handler Aman)
+    onSnapshot(collection(db, "menu_inventory"), (snap) => {
+      snap.forEach(doc => {
+        inventoryState[doc.id] = doc.data().available;
+      });
+      renderMenuCatalog();
+    }, (error) => {
+      console.warn("Koneksi inventaris ditahan (menunggu pembaruan Rules Firebase):", error.message);
+    });
+
+    // Inisialisasi Tracker jika ada Order Aktif tersimpan
+    if (activeOrderId) {
+      listenToActiveOrder(activeOrderId);
     }
 
-    // ==================== SISTEM AUTENTIKASI EMAIL LINK ====================
-    const accountModal = document.getElementById("accountModal");
-    const loggedOutView = document.getElementById("authLoggedOutView");
-    const loggedInView = document.getElementById("authLoggedInView");
-    const userBtnLabel = document.getElementById("userAccountBtnLabel");
-    const userAvatar = document.getElementById("userAvatarIcon");
-    const profileEmailDisplay = document.getElementById("profileEmailDisplay");
+    // Render Menu
+    function renderMenuCatalog() {
+      const container = document.getElementById("menu-grid-container");
+      const emptyState = document.getElementById("menu-empty-state");
 
-    if (auth) {
-      // 1. Cek apakah halaman dibuka via Tautan Masuk Email (Magic Link)
-      if (isSignInWithEmailLink(auth, window.location.href)) {
-        let email = window.localStorage.getItem("rujakin_email_for_signin");
-        if (!email) {
-          email = window.prompt("Mohon konfirmasi alamat email Anda untuk menyelesaikan masuk:");
-        }
-        if (email) {
-          signInWithEmailLink(auth, email, window.location.href)
-            .then(() => {
-              window.localStorage.removeItem("rujakin_email_for_signin");
-              // Bersihkan query link tanpa reload
-              window.history.replaceState({}, document.title, window.location.pathname);
-              alert("Selamat datang kembali! Anda telah berhasil masuk.");
-            })
-            .catch((err) => {
-              console.warn("Gagal masuk via tautan email:", err.message);
-            });
-        }
+      let filtered = MENU_ITEMS.filter(item => {
+        const matchCat = currentCategory === "all" || item.category === currentCategory;
+        const matchQuery = !searchQuery || 
+          item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+          item.origin.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchCat && matchQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+        return;
       }
 
-      // 2. Pantau Perubahan Status Masuk Pengguna
-      onAuthStateChanged(auth, (user) => {
-        if (user && !user.isAnonymous) {
-          currentUser = user;
-          userBtnLabel.innerText = user.email.split("@")[0];
-          userAvatar.className = "w-5 h-5 rounded-full bg-coral text-white flex items-center justify-center text-[10px] font-extrabold uppercase";
-          userAvatar.innerText = user.email.charAt(0);
-          profileEmailDisplay.innerText = user.email;
+      container.classList.remove("hidden");
+      emptyState.classList.add("hidden");
 
-          loggedOutView.classList.add("hidden");
-          loggedInView.classList.remove("hidden");
-          document.getElementById("accountModalTitle").innerText = "Akun Saya";
-          document.getElementById("accountModalSubtitle").innerText = "Kelola riwayat pesanan & re-order";
+      container.innerHTML = filtered.map(item => {
+        const isAvailable = inventoryState[item.id] !== false;
+        return `
+          <div class="bg-white rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs flex flex-col justify-between hover:border-stone-300 transition-all">
+            <div>
+              <div class="relative h-44 w-full bg-stone-100 overflow-hidden">
+                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300 ${!isAvailable ? 'grayscale opacity-60' : ''}" loading="lazy"/>
+                <div class="absolute top-2.5 left-2.5 flex gap-1.5">
+                  <span class="bg-black/60 backdrop-blur-xs text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
+                    ${item.origin}
+                  </span>
+                  <span class="bg-white/90 backdrop-blur-xs text-stone-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                    Menu Baru
+                  </span>
+                </div>
+                ${!isAvailable ? `
+                  <div class="absolute inset-0 bg-stone-900/60 flex items-center justify-center">
+                    <span class="bg-rose-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">Stok Habis</span>
+                  </div>
+                ` : ''}
+              </div>
+              <div class="p-4">
+                <h3 class="font-extrabold text-stone-900 text-base">${item.name}</h3>
+                <p class="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">${item.description}</p>
+              </div>
+            </div>
 
-          // Muat Riwayat Pesanan Pengguna
-          loadUserOrderHistory(user.uid, user.email);
+            <div class="px-4 pb-4 pt-1 flex items-center justify-between border-t border-stone-100">
+              <div>
+                <p class="text-[10px] text-stone-400 font-medium">Harga per porsi</p>
+                <p class="text-base font-extrabold text-stone-900">Rp ${item.price.toLocaleString("id-ID")}</p>
+              </div>
+              <button 
+                onclick="openCustomizeModal('${item.id}')"
+                ${!isAvailable ? 'disabled' : ''}
+                class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                  isAvailable 
+                    ? 'bg-[#FF6B4A] hover:bg-[#e05637] text-white shadow-sm active:scale-95' 
+                    : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                }">
+                ${isAvailable ? 'Atur Racikan' : 'Habis'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Modal Racikan Bumbu
+    window.openCustomizeModal = function(menuId) {
+      const item = MENU_ITEMS.find(m => m.id === menuId);
+      if (!item) return;
+
+      activeCustomizingMenu = item;
+      selectedSpice = 2;
+      selectedTexture = "Kacang Kasar";
+      selectedServing = "Bumbu Dipisah";
+
+      document.getElementById("modal-menu-name").textContent = item.name;
+      document.getElementById("modal-menu-price").textContent = `Rp ${item.price.toLocaleString("id-ID")}`;
+      document.getElementById("modal-notes").value = "";
+
+      updateSpiceUI();
+      updateTextureUI();
+      updateServingUI();
+
+      document.getElementById("customize-modal").classList.remove("hidden");
+    };
+
+    window.closeCustomizeModal = function() {
+      document.getElementById("customize-modal").classList.add("hidden");
+      activeCustomizingMenu = null;
+    };
+
+    window.selectSpice = function(level) {
+      selectedSpice = level;
+      updateSpiceUI();
+    };
+
+    function updateSpiceUI() {
+      document.getElementById("label-selected-spice").textContent = `Level ${selectedSpice}`;
+      document.querySelectorAll(".spice-btn").forEach(btn => {
+        const lvl = parseInt(btn.getAttribute("data-spice"));
+        if (lvl === selectedSpice) {
+          btn.className = "spice-btn py-3 rounded-xl border-[#FF6B4A] bg-[#FF6B4A]/10 text-[#FF6B4A] text-center font-bold text-sm transition-all";
         } else {
-          currentUser = null;
-          userBtnLabel.innerText = "Masuk";
-          userAvatar.className = "w-5 h-5 rounded-full bg-stone-300 text-stone-700 flex items-center justify-center text-[10px] font-extrabold";
-          userAvatar.innerHTML = `
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-          `;
-          loggedOutView.classList.remove("hidden");
-          loggedInView.classList.add("hidden");
-          document.getElementById("accountModalTitle").innerText = "Masuk ke RUJAKIN";
-          document.getElementById("accountModalSubtitle").innerText = "Simpan riwayat pesanan & pesan ulang instan";
-
-          // Jika anonim belum aktif, aktifkan untuk akses Firestore
-          if (!user) {
-            signInAnonymously(auth).catch(() => {});
-          }
+          btn.className = "spice-btn py-3 rounded-xl border border-stone-200 bg-white text-stone-700 text-center font-bold text-sm hover:border-stone-300 transition-all";
         }
       });
     }
 
-    // Buka & Tutup Modal Akun
-    document.getElementById("btnOpenAccountModal").addEventListener("click", () => {
-      accountModal.classList.remove("hidden");
-    });
-    document.getElementById("btnCloseAccountModal").addEventListener("click", () => {
-      accountModal.classList.add("hidden");
-    });
+    window.selectTexture = function(texture) {
+      selectedTexture = texture;
+      updateTextureUI();
+    };
 
-    // Kirim Tautan Masuk Instan (Magic Link)
-    document.getElementById("btnSendEmailLink").addEventListener("click", async () => {
-      const email = document.getElementById("inputAuthEmail").value.trim();
-      if (!email || !email.includes("@")) {
-        alert("Mohon masukkan alamat email yang valid.");
+    function updateTextureUI() {
+      document.querySelectorAll(".texture-btn").forEach(btn => {
+        const tex = btn.getAttribute("data-texture");
+        if (tex === selectedTexture) {
+          btn.className = "texture-btn py-3 px-2 rounded-xl border-[#FF6B4A] bg-[#FF6B4A]/10 text-[#FF6B4A] font-semibold text-xs text-center transition-all";
+        } else {
+          btn.className = "texture-btn py-3 px-2 rounded-xl border border-stone-200 bg-white text-stone-700 font-semibold text-xs text-center hover:border-stone-300 transition-all";
+        }
+      });
+    }
+
+    window.selectServing = function(serving) {
+      selectedServing = serving;
+      updateServingUI();
+    };
+
+    function updateServingUI() {
+      document.querySelectorAll(".serving-btn").forEach(btn => {
+        const srv = btn.getAttribute("data-serving");
+        if (srv === selectedServing) {
+          btn.className = "serving-btn py-3 px-3 rounded-xl border-[#FF6B4A] bg-[#FF6B4A]/10 text-[#FF6B4A] font-semibold text-xs text-center transition-all";
+        } else {
+          btn.className = "serving-btn py-3 px-3 rounded-xl border border-stone-200 bg-white text-stone-700 font-semibold text-xs text-center hover:border-stone-300 transition-all";
+        }
+      });
+    }
+
+    window.confirmAddToCart = function() {
+      if (!activeCustomizingMenu) return;
+
+      const notes = document.getElementById("modal-notes").value.trim();
+      const cartItem = {
+        cartId: "C_" + Date.now() + "_" + Math.random().toString(36).substr(2, 4),
+        id: activeCustomizingMenu.id,
+        name: activeCustomizingMenu.name,
+        price: activeCustomizingMenu.price,
+        spiceLevel: selectedSpice,
+        texture: selectedTexture,
+        serving: selectedServing,
+        bumbuPosition: selectedServing === "Bumbu Dipisah" ? "pisah" : "campur",
+        notes: notes,
+        quantity: 1
+      };
+
+      cart.push(cartItem);
+      updateCartUI();
+      closeCustomizeModal();
+      showToast(`${activeCustomizingMenu.name} ditambahkan`);
+    };
+
+    // Keranjang Belanja & Drawer
+    window.toggleCartDrawer = function(open) {
+      const overlay = document.getElementById("cart-drawer-overlay");
+      if (open) {
+        renderCartItems();
+        overlay.classList.remove("hidden");
+      } else {
+        overlay.classList.add("hidden");
+      }
+    };
+
+    function updateCartUI() {
+      const totalCount = cart.reduce((sum, it) => sum + it.quantity, 0);
+      const subtotal = cart.reduce((sum, it) => sum + (it.price * it.quantity), 0);
+
+      const badge = document.getElementById("cart-badge-count");
+      badge.textContent = totalCount;
+      badge.style.transform = totalCount > 0 ? "scale(1)" : "scale(0)";
+
+      document.getElementById("drawer-item-count-badge").textContent = `${totalCount} item`;
+
+      const floatingBar = document.getElementById("floating-cart-bar");
+      if (totalCount > 0) {
+        floatingBar.classList.remove("hidden");
+        document.getElementById("floating-cart-count").textContent = totalCount;
+        document.getElementById("floating-cart-total").textContent = `Rp ${subtotal.toLocaleString("id-ID")} →`;
+      } else {
+        floatingBar.classList.add("hidden");
+      }
+
+      renderCartItems();
+      calculateTotals();
+    }
+
+    function renderCartItems() {
+      const listEl = document.getElementById("cart-items-list");
+      if (cart.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-center py-16 text-stone-400">
+            <span class="text-3xl block mb-2">🛒</span>
+            <p class="font-bold text-stone-600 text-sm">Keranjang masih kosong</p>
+            <p class="text-xs text-stone-400 mt-1">Pilih racikan rujak favoritmu dari katalog.</p>
+          </div>
+        `;
         return;
       }
 
-      const btn = document.getElementById("btnSendEmailLink");
+      listEl.innerHTML = cart.map(item => `
+        <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-3 text-xs">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-bold text-stone-800">${item.name}</p>
+              <p class="text-[#FF6B4A] font-bold mt-0.5">Rp ${(item.price * item.quantity).toLocaleString("id-ID")}</p>
+            </div>
+            <button onclick="removeFromCart('${item.cartId}')" class="text-stone-400 hover:text-rose-600 p-1">✕</button>
+          </div>
+          <div class="mt-2 text-[11px] text-stone-500 space-y-0.5 bg-white p-2 rounded-lg border border-stone-100">
+            <p>Level Pedas: <strong>Level ${item.spiceLevel}</strong></p>
+            <p>Bumbu: ${item.texture} • ${item.serving}</p>
+            ${item.notes ? `<p class="italic text-stone-600">"${item.notes}"</p>` : ''}
+          </div>
+          <div class="flex items-center justify-end gap-2.5 mt-2.5 pt-2 border-t border-stone-200/60">
+            <button onclick="updateItemQty('${item.cartId}', -1)" class="w-6 h-6 rounded-lg bg-white border border-stone-200 text-stone-700 font-bold hover:bg-stone-100">-</button>
+            <span class="font-bold text-stone-800 text-xs">${item.quantity}</span>
+            <button onclick="updateItemQty('${item.cartId}', 1)" class="w-6 h-6 rounded-lg bg-white border border-stone-200 text-stone-700 font-bold hover:bg-stone-100">+</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    window.updateItemQty = function(cartId, delta) {
+      const idx = cart.findIndex(c => c.cartId === cartId);
+      if (idx !== -1) {
+        cart[idx].quantity += delta;
+        if (cart[idx].quantity <= 0) {
+          cart.splice(idx, 1);
+        }
+        updateCartUI();
+      }
+    };
+
+    window.removeFromCart = function(cartId) {
+      cart = cart.filter(c => c.cartId !== cartId);
+      updateCartUI();
+    };
+
+    window.setDeliveryMethod = function(method) {
+      deliveryMethod = method;
+      const btnDeliv = document.getElementById("btn-delivery");
+      const btnPick = document.getElementById("btn-pickup");
+      const addrInput = document.getElementById("cust-address");
+
+      if (method === "delivery") {
+        btnDeliv.className = "py-2 px-3 rounded-xl border-2 border-[#FF6B4A] bg-[#FF6B4A]/10 font-bold text-[#FF6B4A] text-center";
+        btnPick.className = "py-2 px-3 rounded-xl border border-stone-200 bg-white font-semibold text-stone-600 text-center";
+        addrInput.placeholder = "Alamat Pengiriman Lengkap *";
+        addrInput.disabled = false;
+        addrInput.value = "";
+      } else {
+        btnPick.className = "py-2 px-3 rounded-xl border-2 border-[#FF6B4A] bg-[#FF6B4A]/10 font-bold text-[#FF6B4A] text-center";
+        btnDeliv.className = "py-2 px-3 rounded-xl border border-stone-200 bg-white font-semibold text-stone-600 text-center";
+        addrInput.value = "Ambil Mandiri di Kedai RUJAKIN";
+        addrInput.disabled = true;
+      }
+      calculateTotals();
+    };
+
+    window.setPaymentMethod = function(method) {
+      paymentMethod = method;
+      const btnQris = document.getElementById("btn-pay-qris");
+      const btnCod = document.getElementById("btn-pay-cod");
+
+      if (method === "qris") {
+        btnQris.className = "py-2 px-3 rounded-xl border-2 border-[#FF6B4A] bg-[#FF6B4A]/10 font-bold text-[#FF6B4A] text-center";
+        btnCod.className = "py-2 px-3 rounded-xl border border-stone-200 bg-white font-semibold text-stone-600 text-center";
+      } else {
+        btnCod.className = "py-2 px-3 rounded-xl border-2 border-[#FF6B4A] bg-[#FF6B4A]/10 font-bold text-[#FF6B4A] text-center";
+        btnQris.className = "py-2 px-3 rounded-xl border border-stone-200 bg-white font-semibold text-stone-600 text-center";
+      }
+    };
+
+    function calculateTotals() {
+      const subtotal = cart.reduce((sum, it) => sum + (it.price * it.quantity), 0);
+      const shipping = (cart.length > 0 && deliveryMethod === "delivery") ? 10000 : 0;
+      const grandTotal = subtotal + shipping;
+
+      document.getElementById("summary-subtotal").textContent = `Rp ${subtotal.toLocaleString("id-ID")}`;
+      document.getElementById("summary-shipping").textContent = deliveryMethod === "delivery" ? "Rp 10.000" : "Rp 0 (Ambil Kedai)";
+      document.getElementById("summary-total").textContent = `Rp ${grandTotal.toLocaleString("id-ID")}`;
+    }
+
+    // Submit Order ke Firestore & WhatsApp
+    window.submitOrder = async function() {
+      if (cart.length === 0) {
+        showToast("Keranjang Anda masih kosong!");
+        return;
+      }
+
+      const name = document.getElementById("cust-name").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+
+      if (!name) {
+        showToast("Mohon masukkan nama pemesan!");
+        return;
+      }
+      if (!phone || phone.length < 8) {
+        showToast("Mohon masukkan nomor WhatsApp yang valid!");
+        return;
+      }
+      if (deliveryMethod === "delivery" && (!address || address.length < 5)) {
+        showToast("Mohon masukkan alamat pengantaran lengkap!");
+        return;
+      }
+
+      const submitBtn = document.getElementById("btn-submit-order");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Mengirim Pesanan...";
+
+      const orderNumber = "RJK-" + Math.floor(1000 + Math.random() * 9000);
+      const subtotal = cart.reduce((sum, it) => sum + (it.price * it.quantity), 0);
+      const shipping = deliveryMethod === "delivery" ? 10000 : 0;
+      const totalAmount = subtotal + shipping;
+
+      const orderData = {
+        orderId: orderNumber,
+        createdAt: new Date().toISOString(),
+        customerName: name,
+        customerPhone: phone,
+        customerAddress: address,
+        deliveryType: deliveryMethod,
+        paymentMethod: paymentMethod,
+        status: "queue",
+        items: cart,
+        subtotal: subtotal,
+        shippingFee: shipping,
+        totalAmount: totalAmount,
+        userId: currentUser ? currentUser.uid : "guest",
+        customerEmail: currentUser && currentUser.email ? currentUser.email : null
+      };
+
+      try {
+        await setDoc(doc(db, "orders", orderNumber), orderData);
+
+        const waItemsText = cart.map(it => 
+          `• ${it.name} (x${it.quantity}) - Rp ${(it.price * it.quantity).toLocaleString("id-ID")}\n  Pedas: Level ${it.spiceLevel} | Bumbu: ${it.texture} (${it.serving})${it.notes ? `\n  Catatan: ${it.notes}` : ''}`
+        ).join("\n\n");
+
+        const waText = 
+`*PESANAN RUJAKIN BARU* 🌿
+Nomor Nota: *#${orderNumber}*
+Nama: ${name}
+WhatsApp: ${phone}
+Layanan: ${deliveryMethod === 'delivery' ? 'Diantar Kurir' : 'Ambil di Kedai'}
+Alamat: ${address}
+Pembayaran: ${paymentMethod === 'qris' ? 'QRIS / Transfer' : 'Tunai COD'}
+
+*RINCIAN MENU:*
+${waItemsText}
+
+Subtotal: Rp ${subtotal.toLocaleString("id-ID")}
+Ongkir: Rp ${shipping.toLocaleString("id-ID")}
+*TOTAL TAGIHAN: Rp ${totalAmount.toLocaleString("id-ID")}*
+
+Mohon segera diproses ya kedai RUJAKIN, terima kasih!`;
+
+        const waUrl = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(waText)}`;
+
+        localStorage.setItem("rujakin_active_order", orderNumber);
+        activeOrderId = orderNumber;
+        listenToActiveOrder(orderNumber);
+
+        document.getElementById("success-order-id").textContent = `#${orderNumber}`;
+        document.getElementById("success-wa-link").href = waUrl;
+        document.getElementById("success-modal").classList.remove("hidden");
+
+        cart = [];
+        updateCartUI();
+        toggleCartDrawer(false);
+
+      } catch (err) {
+        console.error("Gagal simpan order:", err);
+        showToast("Terjadi kendala jaringan saat menyimpan order.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Konfirmasi & Pesan Sekarang";
+      }
+    };
+
+    window.closeSuccessModal = function() {
+      document.getElementById("success-modal").classList.add("hidden");
+    };
+
+    // Live Order Tracker Listener (Dengan Error Handler Aman)
+    function listenToActiveOrder(orderId) {
+      if (orderUnsubscribe) orderUnsubscribe();
+
+      const trackerCard = document.getElementById("live-order-tracker-card");
+      document.getElementById("tracker-order-id").textContent = `#${orderId}`;
+      trackerCard.classList.remove("hidden");
+
+      orderUnsubscribe = onSnapshot(doc(db, "orders", orderId), (snapshot) => {
+        if (!snapshot.exists()) {
+          document.getElementById("tracker-status-description").textContent = "Data pesanan tidak ditemukan di sistem.";
+          return;
+        }
+
+        const data = snapshot.data();
+        updateTrackerNodes(data.status);
+      }, (err) => {
+        console.warn("Tracker listener info:", err.message);
+      });
+    }
+
+    function updateTrackerNodes(status) {
+      const node1 = document.getElementById("step-node-1");
+      const node2 = document.getElementById("step-node-2");
+      const node3 = document.getElementById("step-node-3");
+      const desc = document.getElementById("tracker-status-description");
+
+      if (status === "queue") {
+        node1.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-[#FF6B4A] text-white transition-colors animate-pulse";
+        node2.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-stone-200 text-stone-600 transition-colors";
+        node3.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-stone-200 text-stone-600 transition-colors";
+        desc.textContent = "Pesananmu telah diterima kedai dan masuk ke antrean juru racik.";
+      } else if (status === "cooking") {
+        node1.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-emerald-500 text-white transition-colors";
+        node2.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-amber-500 text-white transition-colors animate-pulse";
+        node3.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-stone-200 text-stone-600 transition-colors";
+        desc.textContent = "Sedang diracik! Buah segar dipotong dan bumbu diulek dadakan.";
+      } else if (status === "completed") {
+        node1.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-emerald-500 text-white transition-colors";
+        node2.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-emerald-500 text-white transition-colors";
+        node3.className = "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-emerald-600 text-white transition-colors";
+        desc.textContent = "Rujak telah selesai diracik dan siap dinikmati!";
+      }
+    }
+
+    window.dismissActiveTracker = function() {
+      document.getElementById("live-order-tracker-card").classList.add("hidden");
+    };
+
+    // Modal Lacak Manual
+    window.openTrackerModal = function() {
+      document.getElementById("tracker-modal").classList.remove("hidden");
+    };
+
+    window.closeTrackerModal = function() {
+      document.getElementById("tracker-modal").classList.add("hidden");
+    };
+
+    window.searchManualOrder = async function() {
+      const rawInput = document.getElementById("manual-track-id").value.trim().toUpperCase();
+      const resEl = document.getElementById("manual-track-result");
+
+      if (!rawInput) {
+        resEl.textContent = "Ketikkan nomor nota terlebih dahulu.";
+        return;
+      }
+
+      const formattedId = rawInput.startsWith("RJK-") ? rawInput : `RJK-${rawInput}`;
+      resEl.textContent = "Mencari pesanan di Firestore...";
+
+      try {
+        const snap = await getDoc(doc(db, "orders", formattedId));
+        if (snap.exists()) {
+          const data = snap.data();
+          resEl.innerHTML = `Ditemukan: <strong>#${formattedId}</strong> (${data.status === 'completed' ? 'Selesai' : data.status === 'cooking' ? 'Sedang Diracik' : 'Menunggu Antrean'})`;
+          localStorage.setItem("rujakin_active_order", formattedId);
+          activeOrderId = formattedId;
+          listenToActiveOrder(formattedId);
+          setTimeout(() => closeTrackerModal(), 1200);
+        } else {
+          resEl.textContent = `Nota #${formattedId} tidak ditemukan.`;
+        }
+      } catch (err) {
+        resEl.textContent = "Gagal menghubungkan ke database.";
+      }
+    };
+
+    // Akun & Riwayat Pelanggan
+    window.openAccountModal = function() {
+      document.getElementById("account-modal").classList.remove("hidden");
+    };
+
+    window.closeAccountModal = function() {
+      document.getElementById("account-modal").classList.add("hidden");
+    };
+
+    function updateAuthUI(user) {
+      const label = document.getElementById("account-label-header");
+      const guestView = document.getElementById("account-guest-view");
+      const loggedView = document.getElementById("account-logged-view");
+      const emailDisplay = document.getElementById("user-email-display");
+
+      if (user && !user.isAnonymous && user.email) {
+        label.textContent = user.email.split("@")[0];
+        guestView.classList.add("hidden");
+        loggedView.classList.remove("hidden");
+        emailDisplay.textContent = user.email;
+      } else {
+        label.textContent = "Masuk";
+        guestView.classList.remove("hidden");
+        loggedView.classList.add("hidden");
+      }
+    }
+
+    window.sendLoginEmail = async function() {
+      const email = document.getElementById("login-email-input").value.trim();
+      const statusMsg = document.getElementById("auth-status-msg");
+      const btn = document.getElementById("btn-send-email-link");
+
+      if (!email || !email.includes("@")) {
+        statusMsg.textContent = "Silakan masukkan alamat email yang valid.";
+        statusMsg.className = "text-[11px] text-rose-500 mt-2 text-center";
+        return;
+      }
+
       btn.disabled = true;
-      btn.innerHTML = `<span>Mengirim Tautan Masuk...</span>`;
+      btn.textContent = "Mengirim Tautan...";
+      statusMsg.textContent = "";
 
       const actionCodeSettings = {
         url: window.location.href,
@@ -976,647 +1135,102 @@
 
       try {
         await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        window.localStorage.setItem("rujakin_email_for_signin", email);
-        document.getElementById("authEmailNotice").classList.remove("hidden");
-        btn.innerHTML = `<span>Tautan Terkirim ✓</span>`;
+        window.localStorage.setItem("emailForSignIn", email);
+        statusMsg.textContent = `Tautan masuk berhasil dikirim ke ${email}. Buka email Anda dan klik tautan tersebut!`;
+        statusMsg.className = "text-[11px] text-emerald-600 font-semibold mt-2 text-center";
       } catch (err) {
-        alert("Pemberitahuan: " + err.message);
+        console.error("Gagal kirim link:", err);
+        statusMsg.textContent = "Gagal mengirim tautan: " + (err.message || "Periksa pengaturan domain Firebase.");
+        statusMsg.className = "text-[11px] text-rose-500 mt-2 text-center";
+      } finally {
         btn.disabled = false;
-        btn.innerHTML = `<span>Kirim Tautan Masuk ke Email</span>`;
+        btn.textContent = "Kirim Tautan Masuk Instan";
       }
-    });
+    };
 
-    // Keluar Akun (Logout)
-    document.getElementById("btnLogoutUser").addEventListener("click", async () => {
-      if (auth) {
+    window.handleSignOut = async function() {
+      try {
         await signOut(auth);
-        signInAnonymously(auth).catch(() => {});
-        accountModal.classList.add("hidden");
+        await signInAnonymously(auth);
+        showToast("Berhasil keluar dari akun.");
+        document.getElementById("user-order-history-list").innerHTML = "";
+      } catch (err) {
+        console.error("Gagal logout:", err);
       }
-    });
+    };
 
-    // Muat Riwayat Pesanan Pengguna
-    async function loadUserOrderHistory(userId, userEmail) {
-      if (!db) return;
-
-      const historyContainer = document.getElementById("historyOrdersList");
-      const emptyNotice = document.getElementById("emptyHistoryNotice");
-      const countBadge = document.getElementById("historyOrdersCount");
-
-      historyContainer.innerHTML = `<p class="text-xs text-stone-400 py-3 text-center">Memuat riwayat pesanan...</p>`;
+    async function loadUserOrderHistory(email) {
+      const listEl = document.getElementById("user-order-history-list");
+      listEl.innerHTML = `<p class="text-stone-400 text-center py-4">Memuat riwayat...</p>`;
 
       try {
-        const q = query(collection(db, "orders"), where("userId", "==", userId));
-        const snapshot = await getDocs(q);
+        const q = query(
+          collection(db, "orders"), 
+          where("customerEmail", "==", email), 
+          orderBy("createdAt", "desc")
+        );
+        onSnapshot(q, (snap) => {
+          const orders = [];
+          snap.forEach(d => orders.push(d.data()));
 
-        const orders = [];
-        snapshot.forEach(docSnap => {
-          orders.push({ ...docSnap.data(), orderId: docSnap.id });
-        });
+          if (orders.length === 0) {
+            listEl.innerHTML = `<p class="text-stone-400 text-center py-4">Belum ada riwayat pesanan dengan email ini.</p>`;
+            return;
+          }
 
-        // Urutkan pesanan terbaru di atas
-        orders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
-
-        countBadge.innerText = `${orders.length} Pesanan`;
-
-        if (orders.length === 0) {
-          historyContainer.innerHTML = "";
-          emptyNotice.classList.remove("hidden");
-          return;
-        }
-
-        emptyNotice.classList.add("hidden");
-        historyContainer.innerHTML = orders.map(order => {
-          const dateStr = order.createdAt ? new Date(order.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" }) : "";
-          const itemCount = (order.items || []).reduce((sum, i) => sum + (i.quantity || 1), 0);
-          
-          return `
-            <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs flex flex-col justify-between gap-2">
-              <div class="flex items-start justify-between">
-                <div>
-                  <div class="flex items-center gap-1.5">
-                    <span class="font-extrabold text-charcoal text-xs">${order.orderId}</span>
-                    <span class="text-[10px] text-stone-400">• ${dateStr}</span>
-                  </div>
-                  <span class="text-[11px] text-stone-600 block mt-0.5">${itemCount} porsi rujak • ${formatRupiah(order.grandTotal)}</span>
-                </div>
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-                  order.status === 'selesai' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-                }">
-                  ${order.status === 'selesai' ? 'Selesai' : 'Dalam Proses'}
+          listEl.innerHTML = orders.map(ord => `
+            <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-2.5 text-xs">
+              <div class="flex justify-between items-center pb-1 border-b border-stone-100">
+                <span class="font-mono font-bold text-stone-700">#${ord.orderId}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${ord.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                  ${ord.status === 'completed' ? 'Selesai' : 'Sedang Diproses'}
                 </span>
               </div>
-
-              <div class="pt-2 border-t border-stone-200 flex items-center justify-between">
-                <button 
-                  onclick="window.trackExistingOrder('${order.orderId}')"
-                  class="text-coral hover:underline font-bold text-[11px]"
-                >
-                  Lacak Status
-                </button>
-                <button 
-                  onclick='window.reorderPastItems(${JSON.stringify(order.items || [])})'
-                  class="px-2.5 py-1 bg-coral hover:bg-coral-dark text-white font-bold rounded-lg text-[11px] transition-all tap-target flex items-center gap-1"
-                >
-                  <span>Pesan Ulang</span>
-                </button>
-              </div>
+              <p class="font-bold text-stone-800 mt-1">Total: Rp ${(ord.totalAmount || 0).toLocaleString("id-ID")}</p>
+              <p class="text-[10px] text-stone-400">${ord.items ? ord.items.length : 0} varian rujak</p>
             </div>
-          `;
-        }).join("");
-
+          `).join("");
+        }, (err) => {
+          console.warn("Order history listener:", err.message);
+        });
       } catch (err) {
-        console.warn("Gagal memuat riwayat:", err.message);
-        historyContainer.innerHTML = `<p class="text-xs text-stone-400 py-3 text-center">Riwayat belum tersedia.</p>`;
+        listEl.innerHTML = `<p class="text-stone-400 text-center py-2">Riwayat akan muncul setelah pesanan pertama dibuat.</p>`;
       }
     }
 
-    // Fitur Pesan Ulang Instan (1-Click Re-order)
-    window.reorderPastItems = function(pastItems) {
-      if (!pastItems || pastItems.length === 0) return;
-      
-      pastItems.forEach(item => {
-        cart.push({
-          ...item,
-          cartId: "cart-" + Date.now() + "-" + Math.random().toString(36).substr(2, 4)
-        });
-      });
-
-      accountModal.classList.add("hidden");
-      updateCartUI();
-      openCartDrawer();
-    };
-
-    window.trackExistingOrder = function(orderId) {
-      accountModal.classList.add("hidden");
-      try {
-        localStorage.setItem("rujakin_active_order_id", orderId);
-      } catch (e) {}
-      startLiveOrderTracking(orderId);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
-    // ==================== RENDERING KATALOG ====================
-    function renderProducts() {
-      const grid = document.getElementById("productGrid");
-      const emptyState = document.getElementById("emptyCatalog");
-
-      const filtered = MENU_DATA.filter(item => {
-        const matchCategory = currentCategory === "all" || item.category === currentCategory;
-        const matchSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            item.origin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            item.description.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchCategory && matchSearch;
-      });
-
-      if (filtered.length === 0) {
-        grid.innerHTML = "";
-        emptyState.classList.remove("hidden");
-        return;
-      }
-
-      emptyState.classList.add("hidden");
-      grid.innerHTML = filtered.map(item => `
-        <div class="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
-          <div>
-            <div class="relative h-48 w-full bg-stone-100 overflow-hidden">
-              <img 
-                src="${item.image}" 
-                alt="${item.name}" 
-                class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                loading="lazy"
-              >
-              <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg text-[11px] font-bold text-stone-700 border border-stone-200 shadow-2xs">
-                ${item.origin}
-              </div>
-              ${!item.available ? `
-                <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-[2px] flex items-center justify-center">
-                  <span class="bg-red-500 text-white font-black text-xs px-3 py-1.5 rounded-lg tracking-wider uppercase">Habis Terjual</span>
-                </div>
-              ` : `
-                <div class="absolute top-3 right-3 bg-kedondong text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold">
-                  Menu Baru
-                </div>
-              `}
-            </div>
-            
-            <div class="p-4 sm:p-5">
-              <h3 class="font-bold text-base text-charcoal leading-snug mb-1">${item.name}</h3>
-              <p class="text-xs text-stone-500 leading-relaxed line-clamp-2 mb-3">${item.description}</p>
-              <div class="text-coral font-black text-base">${formatRupiah(item.price)}</div>
-            </div>
-          </div>
-
-          <div class="p-4 sm:p-5 pt-0">
-            <button 
-              onclick="window.openSpiceModal('${item.id}')"
-              ${!item.available ? "disabled" : ""}
-              class="w-full py-2.5 rounded-xl font-bold text-xs transition-all tap-target flex items-center justify-center gap-1.5 ${
-                item.available 
-                  ? "bg-coral hover:bg-coral-dark text-white shadow-sm" 
-                  : "bg-stone-200 text-stone-400 cursor-not-allowed"
-              }"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </svg>
-              <span>${item.available ? "Atur Racikan & Pesan" : "Stok Habis"}</span>
-            </button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    // Modal Racikan Bumbu
-    window.openSpiceModal = function(productId) {
-      const product = MENU_DATA.find(m => m.id === productId);
-      if (!product || !product.available) return;
-
-      selectedProductForCustom = product;
-      document.getElementById("modalProductName").innerText = product.name;
-      document.getElementById("modalProductPrice").innerText = formatRupiah(product.price);
-      document.getElementById("customNotes").value = "";
-
-      const defaultSpice = document.querySelector('input[name="spice_level"][value="2 Cabai (Sedang Pas)"]');
-      if (defaultSpice) defaultSpice.checked = true;
-
-      document.getElementById("spiceModal").classList.remove("hidden");
-    };
-
-    function closeSpiceModal() {
-      document.getElementById("spiceModal").classList.add("hidden");
-      selectedProductForCustom = null;
-    }
-
-    document.getElementById("btnCloseSpiceModal").addEventListener("click", closeSpiceModal);
-
-    // Tambah ke Keranjang
-    document.getElementById("btnAddToCartConfirm").addEventListener("click", () => {
-      if (!selectedProductForCustom) return;
-
-      const spiceLevel = document.querySelector('input[name="spice_level"]:checked')?.value || "2 Cabai (Sedang Pas)";
-      const nutTexture = document.querySelector('input[name="nut_texture"]:checked')?.value || "Kacang Kasar";
-      const saucePos = document.querySelector('input[name="sauce_position"]:checked')?.value || "Bumbu Dipisah";
-      const notes = document.getElementById("customNotes").value.trim();
-
-      const cartItem = {
-        cartId: "cart-" + Date.now() + "-" + Math.random().toString(36).substr(2, 4),
-        productId: selectedProductForCustom.id,
-        name: selectedProductForCustom.name,
-        price: selectedProductForCustom.price,
-        spiceLevel: spiceLevel,
-        nutTexture: nutTexture,
-        saucePos: saucePos,
-        notes: notes,
-        quantity: 1
-      };
-
-      cart.push(cartItem);
-      closeSpiceModal();
-      updateCartUI();
-      openCartDrawer();
-    });
-
-    // Update Keranjang UI
-    function updateCartUI() {
-      const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-      const badge = document.getElementById("cartCountBadge");
-      if (count > 0) {
-        badge.innerText = count;
-        badge.classList.remove("hidden");
-        badge.classList.add("flex");
-      } else {
-        badge.classList.add("hidden");
-        badge.classList.remove("flex");
-      }
-
-      const mobileBar = document.getElementById("mobileCartBar");
-      if (count > 0) {
-        mobileBar.classList.remove("hidden");
-        document.getElementById("mobileCartCount").innerText = count;
-        document.getElementById("mobileCartTotal").innerText = formatRupiah(subtotal);
-      } else {
-        mobileBar.classList.add("hidden");
-      }
-
-      const itemsList = document.getElementById("cartItemsList");
-      const emptyState = document.getElementById("cartEmptyState");
-      const formSection = document.getElementById("checkoutFormSection");
-      const footer = document.getElementById("cartFooter");
-
-      if (cart.length === 0) {
-        itemsList.innerHTML = "";
-        emptyState.classList.remove("hidden");
-        formSection.classList.add("hidden");
-        footer.classList.add("hidden");
-        return;
-      }
-
-      emptyState.classList.add("hidden");
-      formSection.classList.remove("hidden");
-      footer.classList.remove("hidden");
-
-      itemsList.innerHTML = cart.map(item => `
-        <div class="p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs flex flex-col justify-between gap-2">
-          <div class="flex justify-between items-start gap-2">
-            <div>
-              <h4 class="font-bold text-charcoal text-sm">${item.name}</h4>
-              <p class="text-coral font-bold mt-0.5">${formatRupiah(item.price)}</p>
-            </div>
-            <button onclick="window.removeCartItem('${item.cartId}')" class="text-stone-400 hover:text-red-500 p-1">
-              ✕
-            </button>
-          </div>
-
-          <div class="bg-white p-2.5 rounded-lg border border-stone-200/80 space-y-0.5 text-stone-600 text-[11px]">
-            <p><span class="text-stone-400 font-medium">Pedas:</span> <span class="font-bold text-coral-dark">${item.spiceLevel}</span></p>
-            <p><span class="text-stone-400 font-medium">Bumbu:</span> ${item.nutTexture} (${item.saucePos})</p>
-            ${item.notes ? `<p class="text-amber-800 bg-amber-50 px-2 py-0.5 rounded mt-1 border border-amber-200 text-[10px]">Catatan: "${item.notes}"</p>` : ""}
-          </div>
-
-          <div class="flex items-center justify-between pt-1">
-            <span class="text-stone-500 font-medium">Subtotal: ${formatRupiah(item.price * item.quantity)}</span>
-            <div class="flex items-center gap-2">
-              <button onclick="window.changeQuantity('${item.cartId}', -1)" class="w-6 h-6 rounded-lg bg-white border border-stone-300 font-bold flex items-center justify-center hover:bg-stone-100">-</button>
-              <span class="font-bold text-xs w-4 text-center">${item.quantity}</span>
-              <button onclick="window.changeQuantity('${item.cartId}', 1)" class="w-6 h-6 rounded-lg bg-white border border-stone-300 font-bold flex items-center justify-center hover:bg-stone-100">+</button>
-            </div>
-          </div>
-        </div>
-      `).join("");
-
-      const serviceType = document.querySelector('input[name="service_type"]:checked')?.value || "delivery";
-      const deliveryFee = serviceType === "delivery" ? 10000 : 0;
-      const grandTotal = subtotal + deliveryFee;
-
-      document.getElementById("summarySubtotal").innerText = formatRupiah(subtotal);
-      document.getElementById("summaryDelivery").innerText = serviceType === "delivery" ? formatRupiah(10000) : "Gratis (Ambil Sendiri)";
-      document.getElementById("summaryGrandTotal").innerText = formatRupiah(grandTotal);
-    }
-
-    window.changeQuantity = function(cartId, delta) {
-      const item = cart.find(i => i.cartId === cartId);
-      if (!item) return;
-      item.quantity += delta;
-      if (item.quantity <= 0) {
-        cart = cart.filter(i => i.cartId !== cartId);
-      }
-      updateCartUI();
-    };
-
-    window.removeCartItem = function(cartId) {
-      cart = cart.filter(i => i.cartId !== cartId);
-      updateCartUI();
-    };
-
-    function openCartDrawer() {
-      document.getElementById("cartDrawer").classList.remove("hidden");
-    }
-    function closeCartDrawer() {
-      document.getElementById("cartDrawer").classList.add("hidden");
-    }
-
-    document.getElementById("btnOpenCart").addEventListener("click", openCartDrawer);
-    document.getElementById("btnOpenCartMobile").addEventListener("click", openCartDrawer);
-    document.getElementById("btnCloseCart").addEventListener("click", closeCartDrawer);
-
-    document.querySelectorAll('input[name="service_type"]').forEach(radio => {
-      radio.addEventListener("change", (e) => {
-        const addressBox = document.getElementById("addressFieldContainer");
-        if (e.target.value === "pickup") {
-          addressBox.classList.add("hidden");
+    // Filter Kategori
+    window.filterCategory = function(cat) {
+      currentCategory = cat;
+      document.querySelectorAll(".cat-pill").forEach(btn => {
+        if (btn.getAttribute("data-cat") === cat) {
+          btn.className = "cat-pill px-4 py-2 rounded-xl bg-[#232723] text-white whitespace-nowrap transition-colors";
         } else {
-          addressBox.classList.remove("hidden");
-        }
-        updateCartUI();
-      });
-    });
-
-    document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
-      radio.addEventListener("change", (e) => {
-        const qrisBox = document.getElementById("qrisDetailBox");
-        if (e.target.value === "qris") {
-          qrisBox.classList.remove("hidden");
-        } else {
-          qrisBox.classList.add("hidden");
+          btn.className = "cat-pill px-4 py-2 rounded-xl bg-white border border-stone-200 text-stone-600 hover:border-stone-400 whitespace-nowrap transition-colors";
         }
       });
-    });
-
-    // Kirim Pesanan (Checkout)
-    document.getElementById("btnSubmitOrder").addEventListener("click", async () => {
-      const name = document.getElementById("custName").value.trim();
-      const phone = document.getElementById("custPhone").value.trim();
-      const serviceType = document.querySelector('input[name="service_type"]:checked')?.value || "delivery";
-      const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || "qris";
-      const address = document.getElementById("custAddress").value.trim();
-
-      if (!name) {
-        alert("Mohon masukkan nama pemesan.");
-        document.getElementById("custName").focus();
-        return;
-      }
-      if (!phone || phone.length < 9) {
-        alert("Mohon masukkan nomor WhatsApp aktif yang valid.");
-        document.getElementById("custPhone").focus();
-        return;
-      }
-      if (serviceType === "delivery" && !address) {
-        alert("Mohon masukkan alamat lengkap pengantaran.");
-        document.getElementById("custAddress").focus();
-        return;
-      }
-
-      const btnSubmit = document.getElementById("btnSubmitOrder");
-      btnSubmit.disabled = true;
-      btnSubmit.innerHTML = `<span>Menyimpan Pesanan...</span>`;
-
-      const orderId = "RJK-" + Math.floor(1000 + Math.random() * 9000);
-      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const deliveryFee = serviceType === "delivery" ? 10000 : 0;
-      const grandTotal = subtotal + deliveryFee;
-
-      const orderData = {
-        orderId: orderId,
-        userId: currentUser ? currentUser.uid : null,
-        customerEmail: currentUser ? currentUser.email : null,
-        customerName: name,
-        customerPhone: phone,
-        serviceType: serviceType,
-        deliveryAddress: serviceType === "delivery" ? address : "Ambil Sendiri di Kedai",
-        paymentMethod: paymentMethod,
-        items: cart,
-        subtotal: subtotal,
-        deliveryFee: deliveryFee,
-        grandTotal: grandTotal,
-        status: "antrean",
-        createdAt: new Date().toISOString()
-      };
-
-      // Simpan ke Firestore
-      if (db) {
-        try {
-          await setDoc(doc(db, "orders", orderId), orderData);
-        } catch (e) {
-          console.warn("Disimpan secara lokal:", e.message);
-        }
-      }
-
-      // Susun WhatsApp
-      let waText = `*PESANAN RUJAKIN NUSANTARA*\n`;
-      waText += `No. Nota: *${orderId}*\n`;
-      waText += `Nama: ${name}\n`;
-      waText += `Layanan: ${serviceType === "delivery" ? "Diantar Kurir" : "Ambil di Kedai"}\n`;
-      if (serviceType === "delivery") waText += `Alamat: ${address}\n`;
-      waText += `Pembayaran: ${paymentMethod === "qris" ? "QRIS / Transfer Bank" : "Bayar Tunai di Tempat (COD)"}\n\n`;
-      waText += `*RINCIAN MENU:*\n`;
-
-      cart.forEach((i, idx) => {
-        waText += `${idx + 1}. *${i.name}* (${i.quantity}x)\n`;
-        waText += `   - Level: ${i.spiceLevel}\n`;
-        waText += `   - Bumbu: ${i.nutTexture} (${i.saucePos})\n`;
-        if (i.notes) waText += `   - Catatan: ${i.notes}\n`;
-        waText += `   - Subtotal: ${formatRupiah(i.price * i.quantity)}\n`;
-      });
-
-      waText += `\nSubtotal: ${formatRupiah(subtotal)}\n`;
-      waText += `Ongkir: ${formatRupiah(deliveryFee)}\n`;
-      waText += `*TOTAL BAYAR: ${formatRupiah(grandTotal)}*\n\n`;
-      waText += `Mohon segera diproses ya kak. Terima kasih!`;
-
-      const waCleanPhone = STORE_WHATSAPP.replace(/[^0-9]/g, "");
-      const waUrl = `https://wa.me/${waCleanPhone}?text=${encodeURIComponent(waText)}`;
-
-      document.getElementById("successOrderId").innerText = orderId;
-      document.getElementById("successTotalAmount").innerText = formatRupiah(grandTotal);
-      document.getElementById("btnSendWhatsApp").setAttribute("href", waUrl);
-
-      closeCartDrawer();
-      document.getElementById("orderSuccessModal").classList.remove("hidden");
-
-      try {
-        localStorage.setItem("rujakin_active_order_id", orderId);
-        startLiveOrderTracking(orderId);
-      } catch (e) {}
-
-      // Refresh riwayat jika pengguna login
-      if (currentUser) {
-        loadUserOrderHistory(currentUser.uid, currentUser.email);
-      }
-
-      cart = [];
-      updateCartUI();
-      btnSubmit.disabled = false;
-      btnSubmit.innerHTML = `<span>Pesan Sekarang</span>`;
-    });
-
-    document.getElementById("btnCloseSuccessModal").addEventListener("click", () => {
-      document.getElementById("orderSuccessModal").classList.add("hidden");
-    });
-
-    // ==================== LIVE ORDER TRACKER LOGIC ====================
-    let activeOrderUnsubscribe = null;
-
-    function startLiveOrderTracking(orderId) {
-      if (!orderId || !db) return;
-
-      const trackerSection = document.getElementById("activeOrderTracker");
-      document.getElementById("trackOrderIdDisplay").innerText = orderId;
-
-      if (activeOrderUnsubscribe) {
-        activeOrderUnsubscribe();
-      }
-
-      activeOrderUnsubscribe = onSnapshot(doc(db, "orders", orderId), (docSnap) => {
-        if (!docSnap.exists()) {
-          trackerSection.classList.add("hidden");
-          return;
-        }
-
-        const data = docSnap.data();
-        trackerSection.classList.remove("hidden");
-        updateTrackerUI(data);
-      }, (err) => {
-        console.log("Tracker listener error:", err.message);
-      });
-    }
-
-    function updateTrackerUI(data) {
-      const status = data.status || "antrean";
-      const isDelivery = data.serviceType === "delivery";
-      
-      const metaEl = document.getElementById("trackOrderMetaDisplay");
-      metaEl.innerText = `${data.customerName || "Pelanggan"} • ${isDelivery ? "Diantar Kurir" : "Ambil di Kedai"} • Total: ${formatRupiah(data.grandTotal)}`;
-
-      const icon1 = document.getElementById("stepIcon1");
-      const text1 = document.getElementById("stepText1");
-      const icon2 = document.getElementById("stepIcon2");
-      const text2 = document.getElementById("stepText2");
-      const icon3 = document.getElementById("stepIcon3");
-      const text3 = document.getElementById("stepText3");
-
-      const msgDot = document.getElementById("trackStatusDot");
-      const msgText = document.getElementById("trackStatusMessage");
-
-      if (status === "antrean") {
-        icon1.className = "w-8 h-8 rounded-full border-2 border-coral bg-coral text-white text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon1.innerHTML = "1";
-        text1.className = "text-xs font-bold text-coral block";
-
-        icon2.className = "w-8 h-8 rounded-full border-2 border-stone-300 bg-stone-100 text-stone-400 text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon2.innerHTML = "2";
-        text2.className = "text-xs font-semibold text-stone-400 block";
-
-        icon3.className = "w-8 h-8 rounded-full border-2 border-stone-300 bg-stone-100 text-stone-400 text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon3.innerHTML = "3";
-        text3.className = "text-xs font-semibold text-stone-400 block";
-
-        msgDot.className = "w-2 h-2 rounded-full bg-amber-500 animate-ping";
-        msgText.innerText = "Pesanan telah diterima kedai & menunggu antrean racikan.";
-      } else if (status === "diracik") {
-        icon1.className = "w-8 h-8 rounded-full border-2 border-emerald-500 bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon1.innerHTML = "✓";
-        text1.className = "text-xs font-bold text-emerald-700 block";
-
-        icon2.className = "w-8 h-8 rounded-full border-2 border-coral bg-coral text-white text-xs font-bold flex items-center justify-center shadow-xs animate-pulse transition-all";
-        icon2.innerHTML = "2";
-        text2.className = "text-xs font-bold text-coral block";
-
-        icon3.className = "w-8 h-8 rounded-full border-2 border-stone-300 bg-stone-100 text-stone-400 text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon3.innerHTML = "3";
-        text3.className = "text-xs font-semibold text-stone-400 block";
-
-        msgDot.className = "w-2 h-2 rounded-full bg-coral animate-ping";
-        msgText.innerText = "Sedang diracik! Buah segar dipotong dan bumbu diulek dadakan.";
-      } else if (status === "selesai") {
-        icon1.className = "w-8 h-8 rounded-full border-2 border-emerald-500 bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon1.innerHTML = "✓";
-        text1.className = "text-xs font-bold text-emerald-700 block";
-
-        icon2.className = "w-8 h-8 rounded-full border-2 border-emerald-500 bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon2.innerHTML = "✓";
-        text2.className = "text-xs font-bold text-emerald-700 block";
-
-        icon3.className = "w-8 h-8 rounded-full border-2 border-emerald-500 bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-xs transition-all";
-        icon3.innerHTML = "✓";
-        text3.className = "text-xs font-bold text-emerald-700 block";
-
-        msgDot.className = "w-2 h-2 rounded-full bg-emerald-500";
-        msgText.innerText = isDelivery 
-          ? "Pesanan selesai diracik! Kurir bersiap mengantar ke alamat tujuan." 
-          : "Pesanan selesai diracik! Silakan ambil pesananmu di kasir kedai.";
-      }
-    }
-
-    window.dismissActiveTracker = function() {
-      try {
-        localStorage.removeItem("rujakin_active_order_id");
-      } catch (e) {}
-      if (activeOrderUnsubscribe) {
-        activeOrderUnsubscribe();
-      }
-      document.getElementById("activeOrderTracker").classList.add("hidden");
+      renderMenuCatalog();
     };
 
-    // Modal Lacak Manual
-    const manualModal = document.getElementById("manualTrackModal");
-    document.getElementById("btnOpenTrackModal").addEventListener("click", () => {
-      manualModal.classList.remove("hidden");
-      document.getElementById("inputManualOrderId").focus();
-    });
-
-    document.getElementById("btnCloseManualTrackModal").addEventListener("click", () => {
-      manualModal.classList.add("hidden");
-    });
-
-    document.getElementById("btnExecuteManualTrack").addEventListener("click", () => {
-      const orderId = document.getElementById("inputManualOrderId").value.trim().toUpperCase();
-      if (!orderId) {
-        alert("Mohon masukkan nomor nota pesanan.");
-        return;
-      }
-      manualModal.classList.add("hidden");
-      try {
-        localStorage.setItem("rujakin_active_order_id", orderId);
-      } catch (e) {}
-      startLiveOrderTracking(orderId);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-
-    try {
-      const existingOrderId = localStorage.getItem("rujakin_active_order_id");
-      if (existingOrderId) {
-        startLiveOrderTracking(existingOrderId);
-      }
-    } catch (e) {}
-
-    // Kategori & Search Filter
-    document.querySelectorAll(".cat-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".cat-btn").forEach(b => {
-          b.className = "cat-btn px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white text-stone-600 border border-stone-200 hover:border-coral transition-all";
-        });
-        btn.className = "cat-btn px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-coral text-white shadow-sm transition-all";
-        currentCategory = btn.getAttribute("data-cat");
-        renderProducts();
-      });
-    });
-
-    const handleSearch = (val) => {
+    // Pencarian Menu
+    window.handleSearch = function(val) {
       searchQuery = val;
-      renderProducts();
+      renderMenuCatalog();
     };
-    document.getElementById("searchInput").addEventListener("input", (e) => handleSearch(e.target.value));
-    const mobileSearch = document.getElementById("searchInputMobile");
-    if (mobileSearch) {
-      mobileSearch.addEventListener("input", (e) => handleSearch(e.target.value));
+
+    // Helper Toast
+    function showToast(msg) {
+      const toast = document.getElementById("toast-notif");
+      toast.textContent = msg;
+      toast.classList.remove("-translate-y-10", "opacity-0", "pointer-events-none");
+      toast.classList.add("translate-y-0", "opacity-100");
+      setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("-translate-y-10", "opacity-0", "pointer-events-none");
+      }, 2500);
     }
 
-    // Inisialisasi Tampilan Awal
-    renderProducts();
-    updateCartUI();
+    // Render Awal
+    renderMenuCatalog();
   </script>
 </body>
 </html>
