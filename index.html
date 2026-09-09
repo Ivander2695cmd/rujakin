@@ -29,9 +29,19 @@
   <!-- TOP APP BAR -->
   <header class="sticky top-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-stone-200/80">
     <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
-      <!-- Logo -->
-      <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="text-2xl font-extrabold tracking-tight text-[#FF6B4A] hover:opacity-90 transition-opacity">
-        RUJAKIN
+      <!-- Logo Resmi RUJAKIN (Icon Badge + Teks RUJAK Hitam & IN Orange) -->
+      <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex items-center gap-2 sm:gap-2.5 hover:opacity-95 transition-all group shrink-0">
+        <!-- Wadah Ikon Logo (Bisa diganti dengan <img src="logo.png" class="w-full h-full object-contain" /> nanti saat aset resmi siap) -->
+        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-[#FF6B4A] flex items-center justify-center shadow-xs text-white group-hover:scale-105 transition-transform">
+          <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="11" r="6.5" />
+            <path d="M10.5 17.5L12 19.5L13.5 17.5" />
+          </svg>
+        </div>
+        <!-- Tipografi Brand: RUJAK (Charcoal/Hitam) + IN (Orange) -->
+        <span class="text-xl sm:text-2xl font-black tracking-tight text-[#232723] select-none">
+          RUJAK<span class="text-[#FF6B4A]">IN</span>
+        </span>
       </a>
 
       <!-- Search Bar -->
@@ -200,7 +210,7 @@
       <!-- Konten Pilihan Bumbu -->
       <div class="p-5 overflow-y-auto space-y-5 flex-1 text-xs">
 
-        <!-- 1. TINGKAT PEDAS -->
+        <!-- 1. TINGKAT PEDAS (MINIMALIS TANPA JUMLAH CABAI) -->
         <div>
           <div class="flex items-center justify-between mb-2.5">
             <label class="text-sm font-bold text-stone-800">Tingkat Pedas</label>
@@ -216,7 +226,7 @@
           </div>
         </div>
 
-        <!-- 2. TEKSTUR KACANG BUMBU -->
+        <!-- 2. TEKSTUR KACANG BUMBU (BERSIH TANPA KETERANGAN TAMBAHAN) -->
         <div>
           <label class="block text-sm font-bold text-stone-800 mb-2.5">Tekstur Kacang Bumbu</label>
           <div class="grid grid-cols-3 gap-2" id="texture-button-group">
@@ -232,7 +242,7 @@
           </div>
         </div>
 
-        <!-- 3. PENYAJIAN BUMBU -->
+        <!-- 3. PENYAJIAN BUMBU (BERSIH TANPA KETERANGAN TAMBAHAN) -->
         <div>
           <label class="block text-sm font-bold text-stone-800 mb-2.5">Penyajian Bumbu</label>
           <div class="grid grid-cols-2 gap-2" id="serving-button-group">
@@ -377,40 +387,101 @@
     </div>
   </div>
 
-  <!-- MODAL AKUN & RIWAYAT -->
+  <!-- MODAL AKUN & AUTENTIKASI EMAIL/PASSWORD -->
   <div id="account-modal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-stone-900/60 backdrop-blur-xs" onclick="closeAccountModal()"></div>
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl p-6 shadow-2xl text-xs">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm sm:max-w-md bg-white rounded-3xl sm:rounded-2xl p-6 shadow-2xl text-xs">
+      
+      <!-- Header Modal Akun -->
       <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-4">
-        <h3 class="text-base font-bold text-stone-900">Akun Pelanggan</h3>
-        <button onclick="closeAccountModal()" class="text-stone-400 hover:text-stone-700">✕</button>
+        <div>
+          <h3 class="text-base font-extrabold text-stone-900" id="auth-modal-title">Akun Pelanggan RUJAKIN</h3>
+          <p class="text-[11px] text-stone-400 mt-0.5" id="auth-modal-subtitle">Masuk untuk menyimpan riwayat pesanan</p>
+        </div>
+        <button onclick="closeAccountModal()" class="p-1 rounded-full text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
 
-      <!-- Belum Login -->
+      <!-- VIEW 1: FORMULIR AUTENTIKASI (BELUM LOGIN) -->
       <div id="account-guest-view">
-        <p class="text-stone-600 mb-3">Masukkan email untuk menerima tautan masuk instan tanpa kata sandi (semua domain email didukung).</p>
-        <div class="space-y-3">
-          <input type="email" id="login-email-input" placeholder="contoh: budi@gmail.com / budi@yahoo.com" class="w-full border border-stone-200 rounded-xl p-3 text-xs focus:border-[#FF6B4A] outline-none" />
-          <button onclick="sendLoginEmail()" id="btn-send-email-link" class="w-full py-3 bg-[#FF6B4A] hover:bg-[#e05637] text-white font-bold rounded-xl transition-colors">
-            Kirim Tautan Masuk Instan
+        
+        <!-- Tab Pemilih Mode: Masuk vs Daftar -->
+        <div class="flex rounded-xl bg-stone-100 p-1 mb-4 border border-stone-200">
+          <button type="button" onclick="setAuthTab('login')" id="tab-auth-login" class="flex-1 py-2 rounded-lg font-bold text-xs bg-white text-stone-900 shadow-xs transition-all">
+            Masuk Akun
+          </button>
+          <button type="button" onclick="setAuthTab('register')" id="tab-auth-register" class="flex-1 py-2 rounded-lg font-semibold text-xs text-stone-500 hover:text-stone-800 transition-all">
+            Daftar Baru
           </button>
         </div>
-        <p id="auth-status-msg" class="text-[11px] text-stone-500 mt-2 text-center"></p>
+
+        <!-- Form Input -->
+        <form onsubmit="handleAuthSubmit(event)" class="space-y-3">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Alamat Email</label>
+            <input 
+              type="email" 
+              id="auth-email-input" 
+              required
+              placeholder="contoh: nama@gmail.com / nama@yahoo.com" 
+              class="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 text-xs focus:border-[#FF6B4A] focus:outline-none transition-colors"
+            />
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block font-bold text-stone-700">Kata Sandi</label>
+              <button type="button" onclick="handleForgotPassword()" id="btn-forgot-password" class="text-[11px] font-semibold text-[#FF6B4A] hover:underline">
+                Lupa Sandi?
+              </button>
+            </div>
+            <div class="relative">
+              <input 
+                type="password" 
+                id="auth-password-input" 
+                required
+                minlength="6"
+                placeholder="Minimal 6 karakter" 
+                class="w-full bg-white border border-stone-200 rounded-xl px-3.5 py-2.5 pr-10 text-xs focus:border-[#FF6B4A] focus:outline-none transition-colors"
+              />
+              <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-2.5 text-stone-400 hover:text-stone-600">
+                <svg id="pwd-eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Tombol Aksi Masuk/Daftar -->
+          <button type="submit" id="btn-auth-submit" class="w-full py-3 bg-[#FF6B4A] hover:bg-[#e05637] text-white font-bold rounded-xl shadow-md transition-all active:scale-[0.99] mt-2">
+            Masuk ke Akun
+          </button>
+        </form>
+
+        <p id="auth-status-msg" class="text-[11px] text-center mt-3 empty:hidden px-2 py-1.5 rounded-lg"></p>
       </div>
 
-      <!-- Sudah Login -->
+      <!-- VIEW 2: TAMPILAN JIKA SUDAH LOGIN -->
       <div id="account-logged-view" class="hidden space-y-4">
-        <div class="bg-stone-50 p-3 rounded-xl flex items-center justify-between">
-          <div>
-            <p class="text-[10px] text-stone-400 font-semibold">Tersambung sebagai:</p>
-            <p id="user-email-display" class="font-bold text-stone-800 text-xs">-</p>
+        <div class="bg-stone-50 border border-stone-200 p-3.5 rounded-2xl flex items-center justify-between">
+          <div class="overflow-hidden">
+            <p class="text-[10px] text-stone-400 font-semibold uppercase tracking-wider">Akun Aktif</p>
+            <p id="user-email-display" class="font-bold text-stone-800 text-xs truncate">-</p>
           </div>
-          <button onclick="handleSignOut()" class="px-2.5 py-1 text-xs border border-rose-300 text-rose-600 rounded-lg hover:bg-rose-50">Keluar</button>
+          <button onclick="handleSignOut()" class="px-3 py-1.5 text-xs font-bold border border-rose-200 text-rose-600 bg-rose-50/50 hover:bg-rose-100 rounded-xl transition-colors shrink-0">
+            Keluar
+          </button>
         </div>
 
         <div>
-          <h4 class="font-bold text-stone-800 mb-2">Riwayat Pesanan Terakhir</h4>
-          <div id="user-order-history-list" class="space-y-2 max-h-56 overflow-y-auto"></div>
+          <h4 class="font-bold text-stone-800 text-xs mb-2.5">Riwayat Pesanan Anda</h4>
+          <div id="user-order-history-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+            <p class="text-stone-400 text-center py-6">Memuat riwayat pesanan...</p>
+          </div>
         </div>
       </div>
     </div>
@@ -455,9 +526,9 @@
     import { 
       getAuth, 
       signInAnonymously, 
-      sendSignInLinkToEmail, 
-      isSignInWithEmailLink, 
-      signInWithEmailLink, 
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      sendPasswordResetEmail,
       signOut, 
       onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -543,6 +614,7 @@
     let deliveryMethod = "delivery";
     let paymentMethod = "qris";
     let currentUser = null;
+    let currentAuthMode = "login"; // "login" | "register"
     let activeOrderId = localStorage.getItem("rujakin_active_order") || null;
     let orderUnsubscribe = null;
 
@@ -552,36 +624,19 @@
     let selectedTexture = "Kacang Kasar";
     let selectedServing = "Bumbu Dipisah";
 
-    // Inisialisasi Auth & Sinkronisasi
-    signInAnonymously(auth).catch(err => console.log("Anon auth:", err));
-
+    // Inisialisasi Auth State Observer
     onAuthStateChanged(auth, (user) => {
       currentUser = user;
       updateAuthUI(user);
       if (user && !user.isAnonymous && user.email) {
         loadUserOrderHistory(user.email);
+      } else {
+        // Jika guest, login secara anonim agar pembacaan & penulisan Firestore tetap diizinkan
+        if (!user) {
+          signInAnonymously(auth).catch(err => console.log("Anon auth:", err));
+        }
       }
     });
-
-    // Cek jika halaman dibuka dari Email Link Firebase
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-      let email = window.localStorage.getItem("emailForSignIn");
-      if (!email) {
-        email = window.prompt("Mohon masukkan email Anda untuk konfirmasi masuk:");
-      }
-      if (email) {
-        signInWithEmailLink(auth, email, window.location.href)
-          .then((result) => {
-            window.localStorage.removeItem("emailForSignIn");
-            showToast("Berhasil masuk ke akun RUJAKIN!");
-            updateAuthUI(result.user);
-          })
-          .catch((error) => {
-            console.error("Error sign in email link:", error);
-            showToast("Tautan masuk sudah kedaluwarsa atau tidak valid.");
-          });
-      }
-    }
 
     // Listener Stok Real-time dari Dapur (Dengan Error Handler Aman)
     onSnapshot(collection(db, "menu_inventory"), (snap) => {
@@ -598,7 +653,7 @@
       listenToActiveOrder(activeOrderId);
     }
 
-    // Render Menu
+    // Render Katalog Menu
     function renderMenuCatalog() {
       const container = document.getElementById("menu-grid-container");
       const emptyState = document.getElementById("menu-empty-state");
@@ -943,8 +998,8 @@
         subtotal: subtotal,
         shippingFee: shipping,
         totalAmount: totalAmount,
-        userId: currentUser ? currentUser.uid : "guest",
-        customerEmail: currentUser && currentUser.email ? currentUser.email : null
+        userId: currentUser && !currentUser.isAnonymous ? currentUser.uid : "guest",
+        customerEmail: currentUser && !currentUser.isAnonymous && currentUser.email ? currentUser.email : null
       };
 
       try {
@@ -1086,8 +1141,12 @@ Mohon segera diproses ya kedai RUJAKIN, terima kasih!`;
       }
     };
 
-    // Akun & Riwayat Pelanggan
+    // ==========================================
+    // SISTEM AUTENTIKASI: EMAIL & PASSWORD MURNI
+    // ==========================================
+
     window.openAccountModal = function() {
+      clearAuthStatus();
       document.getElementById("account-modal").classList.remove("hidden");
     };
 
@@ -1095,56 +1154,135 @@ Mohon segera diproses ya kedai RUJAKIN, terima kasih!`;
       document.getElementById("account-modal").classList.add("hidden");
     };
 
-    function updateAuthUI(user) {
-      const label = document.getElementById("account-label-header");
-      const guestView = document.getElementById("account-guest-view");
-      const loggedView = document.getElementById("account-logged-view");
-      const emailDisplay = document.getElementById("user-email-display");
+    window.setAuthTab = function(mode) {
+      currentAuthMode = mode;
+      clearAuthStatus();
 
-      if (user && !user.isAnonymous && user.email) {
-        label.textContent = user.email.split("@")[0];
-        guestView.classList.add("hidden");
-        loggedView.classList.remove("hidden");
-        emailDisplay.textContent = user.email;
+      const btnLoginTab = document.getElementById("tab-auth-login");
+      const btnRegTab = document.getElementById("tab-auth-register");
+      const submitBtn = document.getElementById("btn-auth-submit");
+      const modalSubtitle = document.getElementById("auth-modal-subtitle");
+      const forgotBtn = document.getElementById("btn-forgot-password");
+
+      if (mode === "login") {
+        btnLoginTab.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-white text-stone-900 shadow-xs transition-all";
+        btnRegTab.className = "flex-1 py-2 rounded-lg font-semibold text-xs text-stone-500 hover:text-stone-800 transition-all";
+        submitBtn.textContent = "Masuk ke Akun";
+        modalSubtitle.textContent = "Masuk untuk melihat riwayat pesanan Anda";
+        forgotBtn.classList.remove("hidden");
       } else {
-        label.textContent = "Masuk";
-        guestView.classList.remove("hidden");
-        loggedView.classList.add("hidden");
+        btnRegTab.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-white text-stone-900 shadow-xs transition-all";
+        btnLoginTab.className = "flex-1 py-2 rounded-lg font-semibold text-xs text-stone-500 hover:text-stone-800 transition-all";
+        submitBtn.textContent = "Daftar Akun Baru";
+        modalSubtitle.textContent = "Buat akun & kata sandi baru untuk akses di semua perangkat";
+        forgotBtn.classList.add("hidden");
+      }
+    };
+
+    window.togglePasswordVisibility = function() {
+      const pwdInput = document.getElementById("auth-password-input");
+      if (pwdInput.type === "password") {
+        pwdInput.type = "text";
+      } else {
+        pwdInput.type = "password";
+      }
+    };
+
+    function showAuthStatus(msg, isSuccess = false) {
+      const statusMsg = document.getElementById("auth-status-msg");
+      statusMsg.textContent = msg;
+      if (isSuccess) {
+        statusMsg.className = "text-[11px] text-center mt-3 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200";
+      } else {
+        statusMsg.className = "text-[11px] text-center mt-3 px-3 py-2 rounded-lg bg-rose-50 text-rose-600 font-semibold border border-rose-200";
       }
     }
 
-    window.sendLoginEmail = async function() {
-      const email = document.getElementById("login-email-input").value.trim();
+    function clearAuthStatus() {
       const statusMsg = document.getElementById("auth-status-msg");
-      const btn = document.getElementById("btn-send-email-link");
+      statusMsg.textContent = "";
+      statusMsg.className = "text-[11px] text-center mt-3 empty:hidden px-2 py-1.5 rounded-lg";
+    }
 
-      if (!email || !email.includes("@")) {
-        statusMsg.textContent = "Silakan masukkan alamat email yang valid.";
-        statusMsg.className = "text-[11px] text-rose-500 mt-2 text-center";
+    window.handleAuthSubmit = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById("auth-email-input").value.trim();
+      const password = document.getElementById("auth-password-input").value;
+      const submitBtn = document.getElementById("btn-auth-submit");
+
+      if (!email || !password) {
+        showAuthStatus("Mohon lengkapi email dan kata sandi.");
         return;
       }
 
-      btn.disabled = true;
-      btn.textContent = "Mengirim Tautan...";
-      statusMsg.textContent = "";
+      if (password.length < 6) {
+        showAuthStatus("Kata sandi minimal 6 karakter.");
+        return;
+      }
 
-      const actionCodeSettings = {
-        url: window.location.href,
-        handleCodeInApp: true
-      };
+      submitBtn.disabled = true;
+      clearAuthStatus();
+
+      if (currentAuthMode === "register") {
+        submitBtn.textContent = "Mendaftarkan Akun...";
+        try {
+          const userCred = await createUserWithEmailAndPassword(auth, email, password);
+          showToast("Pendaftaran berhasil! Akun aktif.");
+          updateAuthUI(userCred.user);
+        } catch (err) {
+          console.error("Registrasi error:", err);
+          let message = "Gagal mendaftarkan akun.";
+          if (err.code === "auth/email-already-in-use") {
+            message = "Email ini sudah terdaftar. Silakan pilih tab 'Masuk Akun'.";
+          } else if (err.code === "auth/invalid-email") {
+            message = "Format alamat email tidak valid.";
+          } else if (err.code === "auth/weak-password") {
+            message = "Kata sandi terlalu singkat (minimal 6 karakter).";
+          } else if (err.code === "auth/operation-not-allowed") {
+            message = "Fitur Email/Password belum diaktifkan di Firebase Console.";
+          }
+          showAuthStatus(message, false);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Daftar Akun Baru";
+        }
+      } else {
+        submitBtn.textContent = "Memeriksa Akun...";
+        try {
+          const userCred = await signInWithEmailAndPassword(auth, email, password);
+          showToast(`Selamat datang, ${email.split("@")[0]}!`);
+          updateAuthUI(userCred.user);
+        } catch (err) {
+          console.error("Login error:", err);
+          let message = "Email atau kata sandi yang Anda masukkan salah.";
+          if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+            message = "Email atau kata sandi salah. Jika belum punya akun, silakan pilih tab 'Daftar Baru'.";
+          } else if (err.code === "auth/invalid-email") {
+            message = "Format alamat email tidak valid.";
+          } else if (err.code === "auth/too-many-requests") {
+            message = "Terlalu banyak percobaan gagal. Silakan coba beberapa saat lagi.";
+          }
+          showAuthStatus(message, false);
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Masuk ke Akun";
+        }
+      }
+    };
+
+    window.handleForgotPassword = async function() {
+      const email = document.getElementById("auth-email-input").value.trim();
+      if (!email || !email.includes("@")) {
+        showAuthStatus("Ketik alamat email Anda terlebih dahulu di kolom email atas.");
+        return;
+      }
 
       try {
-        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        window.localStorage.setItem("emailForSignIn", email);
-        statusMsg.textContent = `Tautan masuk berhasil dikirim ke ${email}. Buka email Anda dan klik tautan tersebut!`;
-        statusMsg.className = "text-[11px] text-emerald-600 font-semibold mt-2 text-center";
+        await sendPasswordResetEmail(auth, email);
+        showAuthStatus(`Tautan reset kata sandi telah dikirim ke ${email}. Silakan periksa inbox email Anda!`, true);
       } catch (err) {
-        console.error("Gagal kirim link:", err);
-        statusMsg.textContent = "Gagal mengirim tautan: " + (err.message || "Periksa pengaturan domain Firebase.");
-        statusMsg.className = "text-[11px] text-rose-500 mt-2 text-center";
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Kirim Tautan Masuk Instan";
+        console.error("Reset pwd error:", err);
+        showAuthStatus("Gagal mengirim email reset: " + (err.message || "Periksa alamat email."));
       }
     };
 
@@ -1159,9 +1297,33 @@ Mohon segera diproses ya kedai RUJAKIN, terima kasih!`;
       }
     };
 
+    function updateAuthUI(user) {
+      const label = document.getElementById("account-label-header");
+      const guestView = document.getElementById("account-guest-view");
+      const loggedView = document.getElementById("account-logged-view");
+      const emailDisplay = document.getElementById("user-email-display");
+      const modalTitle = document.getElementById("auth-modal-title");
+      const modalSubtitle = document.getElementById("auth-modal-subtitle");
+
+      if (user && !user.isAnonymous && user.email) {
+        label.textContent = user.email.split("@")[0];
+        guestView.classList.add("hidden");
+        loggedView.classList.remove("hidden");
+        emailDisplay.textContent = user.email;
+        modalTitle.textContent = "Profil Pelanggan";
+        modalSubtitle.textContent = "Riwayat pesanan tersambung otomatis";
+      } else {
+        label.textContent = "Masuk";
+        guestView.classList.remove("hidden");
+        loggedView.classList.add("hidden");
+        modalTitle.textContent = "Akun Pelanggan RUJAKIN";
+        modalSubtitle.textContent = currentAuthMode === "login" ? "Masuk untuk melihat riwayat pesanan Anda" : "Buat akun & kata sandi baru untuk akses di semua perangkat";
+      }
+    }
+
     async function loadUserOrderHistory(email) {
       const listEl = document.getElementById("user-order-history-list");
-      listEl.innerHTML = `<p class="text-stone-400 text-center py-4">Memuat riwayat...</p>`;
+      listEl.innerHTML = `<p class="text-stone-400 text-center py-6">Memuat riwayat pesanan...</p>`;
 
       try {
         const q = query(
@@ -1174,27 +1336,36 @@ Mohon segera diproses ya kedai RUJAKIN, terima kasih!`;
           snap.forEach(d => orders.push(d.data()));
 
           if (orders.length === 0) {
-            listEl.innerHTML = `<p class="text-stone-400 text-center py-4">Belum ada riwayat pesanan dengan email ini.</p>`;
+            listEl.innerHTML = `
+              <div class="text-center py-6 bg-stone-50 rounded-xl border border-dashed border-stone-200">
+                <p class="text-xs font-bold text-stone-600">Belum ada pesanan</p>
+                <p class="text-[11px] text-stone-400 mt-0.5">Pesanan baru Anda akan otomatis tercatat di sini.</p>
+              </div>
+            `;
             return;
           }
 
           listEl.innerHTML = orders.map(ord => `
-            <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-2.5 text-xs">
-              <div class="flex justify-between items-center pb-1 border-b border-stone-100">
-                <span class="font-mono font-bold text-stone-700">#${ord.orderId}</span>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${ord.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                  ${ord.status === 'completed' ? 'Selesai' : 'Sedang Diproses'}
+            <div class="bg-white border border-stone-200/90 rounded-xl p-3 text-xs shadow-xs space-y-1.5">
+              <div class="flex justify-between items-center pb-1.5 border-b border-stone-100">
+                <span class="font-mono font-bold text-stone-800">#${ord.orderId}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${ord.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : ord.status === 'cooking' ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-700'}">
+                  ${ord.status === 'completed' ? 'Selesai' : ord.status === 'cooking' ? 'Sedang Diracik' : 'Antrean'}
                 </span>
               </div>
-              <p class="font-bold text-stone-800 mt-1">Total: Rp ${(ord.totalAmount || 0).toLocaleString("id-ID")}</p>
-              <p class="text-[10px] text-stone-400">${ord.items ? ord.items.length : 0} varian rujak</p>
+              <div class="flex justify-between items-baseline pt-0.5">
+                <span class="text-stone-500">${ord.items ? ord.items.length : 0} varian rujak</span>
+                <span class="font-black text-[#FF6B4A]">Rp ${(ord.totalAmount || 0).toLocaleString("id-ID")}</span>
+              </div>
+              <p class="text-[10px] text-stone-400 truncate">${ord.deliveryType === 'pickup' ? 'Ambil di Kedai' : ord.customerAddress || 'Diantar Kurir'}</p>
             </div>
           `).join("");
         }, (err) => {
           console.warn("Order history listener:", err.message);
+          listEl.innerHTML = `<p class="text-stone-400 text-center py-4">Riwayat akan muncul setelah pesanan dibuat.</p>`;
         });
       } catch (err) {
-        listEl.innerHTML = `<p class="text-stone-400 text-center py-2">Riwayat akan muncul setelah pesanan pertama dibuat.</p>`;
+        listEl.innerHTML = `<p class="text-stone-400 text-center py-4">Riwayat akan muncul setelah pesanan dibuat.</p>`;
       }
     }
 
